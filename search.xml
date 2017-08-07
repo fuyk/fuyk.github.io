@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<search>
+  <entry>
+    <title><![CDATA[whystudyIT]]></title>
+    <url>%2F2017%2F08%2F07%2FwhystudyIT%2F</url>
+    <content type="text"></content>
+      <categories>
+        <category>关于我</category>
+      </categories>
+      <tags>
+        <tag>story</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[photos]]></title>
+    <url>%2F2017%2F08%2F06%2Fphotos%2F</url>
+    <content type="text"></content>
+      <tags>
+        <tag>相册</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[hexoStudy]]></title>
+    <url>%2F2017%2F08%2F05%2FhexoStudy%2F</url>
+    <content type="text"><![CDATA[前提准备NodeJSgit确保安装这两个才可以继续。 安装Hexo打开git $ npm install -g hexo部署Hexo在任何想要放置Hexo的文件夹下建立名为Hexo的文件夹，在此文件夹中右键打开Git Bash $ hexo initHexo会自动建立所有博客需要的文件 $ hexo g$ hexo s输入上面的命令就可以在本地看到初始化的博客啦，浏览器中输入localhost:4000以上就完成了博客的本地调试了，下面需要将本地的博客放到github中去，利用github pages 的免费空间存放你的博客，而且别人也可以访问你的博客。 配置和使用github首先需要注册github（废话。。划掉），然后登录github，点击右上角你的头像，再点击Settings，进入设置页面。点击侧栏的SSH and GPG keys,可以查看你是否有本机的SSH密匙。如果没有，说明并没有设置SSH密匙。 检查SSH keys的设置先不管github的网页，回到本机，打开Git Bash。输入： $ cd ~/. ssh 检查本机的ssh密钥如果提示：No such file or directory 说明你是第一次使用git。 生成新的SSH Key：继续输入： $ ssh-keygen -t rsa -C “邮件地址@youremail.com”Generating public/private rsa key pair.Enter file in which to save the key (/Users/your_user_directory/.ssh/id_rsa):&lt;回车就好&gt;系统会要求你输入密码，输入就好，只是这里的输入是不显示占位符的。 Enter passphrase (empty for no passphrase):&lt;输入加密串&gt;Enter same passphrase again:&lt;再次输入加密串&gt;完成后就会提示你的密匙文件所在的位置，打开id_rsa.pub文件，复制所有，回到github网页，点击New SSH key,粘贴到key文本框中，点击add key就可以了。 测试SSH连接输入下面的命令，git@github.com不用修改。 $ ssh -T git@github.com会有这样的反馈： The authenticity of host ‘github.com (207.97.227.239)’ can’t be established.RSA key fingerprint is 16:27:ac:a5:76:28:2d:36:63:1b:56:4d:eb:df:a6:48.Are you sure you want to continue connecting (yes/no)?输入yes，就会看到： Hi Dulmcat! You’ve successfully authenticated, but GitHub does not provide shell access.到这里就代表已经正确的连接到github了。 设置用户信息但还有一些个人信息还是需要继续完善下的，Git会根据用户的名字和邮箱来记录提交。GitHub也是用这些信息来做权限的处理，输入下面的代码进行个人信息的设置，把名称和邮箱替换成你自己的。 $ git config –global user.name “cnfeat”//用户名$ git config –global user.email “cnfeat@gmail.com”//填写自己的邮箱若有问题，从头再来一遍，或者到GitHub help中寻找解决方案。 使用GitHub pages 建立网页与GitHub建立好链接之后，就可以方便的使用它提供的Pages服务。但pages服务每个ID只有一个，大小也只有300M，但作为博客站，已经足够了。 建立仓库登录GitHub后，点击那个大大的绿色New repository按钮，新建一个仓库：Repository name：dulmcat.github.ioDescription (optional): 嗯。。括号里都说了是可选的，就随便吧，可填可不填。注意！！ 这里的Repository name必须是你的github用户名.github.io，否则就不是一个github pages而只是单纯的一个仓库了。点击Create Repository 完成创建。 上传hexo到github pages上传前，需要将Hexo和github想关联起来，在Hexo的配置文件_config.yml文件中,拉到最下面，修改配置文件： deploy: type: git repository: https://github.com/Dulmcat/Dulmcat.github.io branch: master这里的repository填写的是你的github pages所在库（就是上面刚建好的那个）的地址。这里有个坑，关于type的填写，有说应该是github的，有说是git的，我在两个月前的配置文件type写的github，写这篇文章时发现出错了，这才发现好像是作者在3.0之后改为了git，大家在安装Hexo时可以输入命令hexo-v查看Hexo的版本。在3.0之后需要另外安装hexo-deployer-git。 $ npm install hexo-deployer-git –save然后 $ hexo d这里可能会要求填写密码，填了就好。然后在浏览器中输入https://dulmcat.github.io 就可以看到你的博客啦一个在线的博客就这样建好了当然这是我的…要输入 你的github用户名.github.io]]></content>
+      <categories>
+        <category>hexo建博小结</category>
+      </categories>
+      <tags>
+        <tag>hexo</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[studyHexo-1]]></title>
+    <url>%2F2017%2F08%2F05%2FstudyHexo-1%2F</url>
+    <content type="text"></content>
+      <categories>
+        <category>搭建博客</category>
+      </categories>
+      <tags>
+        <tag>test</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[基于Hexo和Github搭建博客]]></title>
+    <url>%2F2017%2F08%2F04%2Fcategories%2F</url>
+    <content type="text"></content>
+      <categories>
+        <category>搭建博客</category>
+      </categories>
+      <tags>
+        <tag>npm</tag>
+        <tag>hexo</tag>
+        <tag>github</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[myGitOneDay]]></title>
+    <url>%2F2017%2F08%2F04%2FmyGitOneDay%2F</url>
+    <content type="text"></content>
+      <tags>
+        <tag>学习</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[Hello World]]></title>
+    <url>%2F2017%2F08%2F04%2Fhello-world%2F</url>
+    <content type="text"><![CDATA[Welcome to Hexo! This is your very first post. Check documentation for more info. If you get any problems when using Hexo, you can find the answer in troubleshooting or you can ask me on GitHub. Quick StartCreate a new post1$ hexo new "My New Post" More info: Writing Run server1$ hexo server More info: Server Generate static files1$ hexo generate More info: Generating Deploy to remote sites1$ hexo deploy More info: Deployment]]></content>
+  </entry>
+</search>
