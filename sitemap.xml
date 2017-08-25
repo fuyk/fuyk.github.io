@@ -2,6 +2,13 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://fuyk.github.io/2017/08/05/hexoStudy/</loc>
+    
+    <lastmod>2017-08-25T14:39:22.634Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://fuyk.github.io/about/index.html</loc>
     
     <lastmod>2017-08-25T08:07:34.425Z</lastmod>
@@ -19,27 +26,6 @@
     <loc>http://fuyk.github.io/2017/08/04/categories/</loc>
     
     <lastmod>2017-08-05T16:40:32.872Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://fuyk.github.io/photo/output.json</loc>
-    
-    <lastmod>2017-08-05T16:17:57.210Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://fuyk.github.io/photo/index.html</loc>
-    
-    <lastmod>2017-08-05T16:07:53.426Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://fuyk.github.io/2017/08/05/hexoStudy/</loc>
-    
-    <lastmod>2017-08-05T15:45:47.759Z</lastmod>
     
   </url>
   

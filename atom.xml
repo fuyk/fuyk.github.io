@@ -38,9 +38,10 @@
     <link href="http://fuyk.github.io/2017/08/05/hexoStudy/"/>
     <id>http://fuyk.github.io/2017/08/05/hexoStudy/</id>
     <published>2017-08-05T14:57:03.000Z</published>
-    <updated>2017-08-05T15:45:47.759Z</updated>
+    <updated>2017-08-25T14:39:22.634Z</updated>
     
-    <content type="html"><![CDATA[<p>前提准备<br>NodeJS<br>git<br>确保安装这两个才可以继续。</p>
+    <content type="html"><![CDATA[<p>前提准备</p>
+<p>NodeJS<br>git<br>确保安装这两个才可以继续。</p>
 <p>安装Hexo<br>打开git</p>
 <p>$ npm install -g hexo<br>部署Hexo<br>在任何想要放置Hexo的文件夹下建立名为Hexo的文件夹，在此文件夹中右键打开Git Bash</p>
 <p>$ hexo init<br>Hexo会自动建立所有博客需要的文件</p>
@@ -67,9 +68,10 @@
     
     <summary type="html">
     
-      &lt;p&gt;前提准备&lt;br&gt;NodeJS&lt;br&gt;git&lt;br&gt;确保安装这两个才可以继续。&lt;/p&gt;
+      &lt;p&gt;前提准备&lt;/p&gt;
+&lt;p&gt;NodeJS&lt;br&gt;git&lt;br&gt;确保安装这两个才可以继续。&lt;/p&gt;
 &lt;p&gt;安装Hexo&lt;br&gt;打开git&lt;/p&gt;
-&lt;p&gt;$ npm install -g hexo&lt;br&gt;部署Hexo&lt;br&gt;在任何想要放置Hexo的文件夹下建立名为Hexo的文件夹，在此文件
+&lt;p&gt;$ npm install -g hexo&lt;br&gt;部署Hexo&lt;br&gt;在任何想要放置Hexo的文件夹下建立名为Hexo的文件夹，
     
     </summary>
     
