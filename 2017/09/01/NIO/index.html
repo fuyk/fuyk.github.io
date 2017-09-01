@@ -102,7 +102,7 @@
 <link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="Hexo, NexT" />
+  <meta name="keywords" content="NIO," />
 
 
 
@@ -120,13 +120,22 @@
 
 
 
-<meta property="og:type" content="website">
-<meta property="og:title" content="新力量=新科技">
-<meta property="og:url" content="http://fuyk.github.io/archives/2016/index.html">
+<meta name="description" content="Java 并发编程之 NIO  问题来源 在传统的架构中，对于客户端的每一次请求，服务器都会创建一个新的线程或者利用线程池复用去处理用户的一个请求，然后返回给用户结果，这样做在高并发的情况下会存在非常严重的性能问题：对于用户的每一次请求都创建一个新的线程是需要一定内存的，同时线程之间频繁的上下文切换也是一个很大的开销。 p.s: 本文涉及的完整实例代码都可以在我的GitHub上面下载。 什么是Se">
+<meta name="keywords" content="NIO">
+<meta property="og:type" content="article">
+<meta property="og:title" content="NIO(-)">
+<meta property="og:url" content="http://fuyk.github.io/2017/09/01/NIO/index.html">
 <meta property="og:site_name" content="新力量=新科技">
+<meta property="og:description" content="Java 并发编程之 NIO  问题来源 在传统的架构中，对于客户端的每一次请求，服务器都会创建一个新的线程或者利用线程池复用去处理用户的一个请求，然后返回给用户结果，这样做在高并发的情况下会存在非常严重的性能问题：对于用户的每一次请求都创建一个新的线程是需要一定内存的，同时线程之间频繁的上下文切换也是一个很大的开销。 p.s: 本文涉及的完整实例代码都可以在我的GitHub上面下载。 什么是Se">
 <meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://fuyk.github.io/2017/09/01/NIO/NIO.jpg">
+<meta property="og:image" content="http://fuyk.github.io/2017/09/01/NIO/NIOC.jpg">
+<meta property="og:image" content="http://fuyk.github.io/2017/09/01/NIO/NIOS.jpg">
+<meta property="og:updated_time" content="2017-09-01T08:41:27.623Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="新力量=新科技">
+<meta name="twitter:title" content="NIO(-)">
+<meta name="twitter:description" content="Java 并发编程之 NIO  问题来源 在传统的架构中，对于客户端的每一次请求，服务器都会创建一个新的线程或者利用线程池复用去处理用户的一个请求，然后返回给用户结果，这样做在高并发的情况下会存在非常严重的性能问题：对于用户的每一次请求都创建一个新的线程是需要一定内存的，同时线程之间频繁的上下文切换也是一个很大的开销。 p.s: 本文涉及的完整实例代码都可以在我的GitHub上面下载。 什么是Se">
+<meta name="twitter:image" content="http://fuyk.github.io/2017/09/01/NIO/NIO.jpg">
 
 
 
@@ -155,13 +164,13 @@
 
 
 
-  <link rel="canonical" href="http://fuyk.github.io/archives/2016/"/>
+  <link rel="canonical" href="http://fuyk.github.io/2017/09/01/NIO/"/>
 
 
 
 
 
-  <title>归档 | 新力量=新科技</title>
+  <title>NIO(-) | 新力量=新科技</title>
   
 
 
@@ -186,7 +195,7 @@
     
   
 
-  <div class="container sidebar-position-left  page-archive  ">
+  <div class="container sidebar-position-left page-post-detail ">
     <div class="headband"></div>
 <a href="https://github.com/fuyk"><img style="position: absolute; top: 0; left: 0; border: 0;" src="https://camo.githubusercontent.com/567c3a48d796e2fc06ea80409cc9dd82bf714434/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f6c6566745f6461726b626c75655f3132313632312e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_left_darkblue_121621.png"></a>
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -338,185 +347,331 @@
           <div id="content" class="content">
             
 
-  
-  
-  
-  <div class="post-block archive">
-    <div id="posts" class="posts-collapse">
-      <span class="archive-move-on"></span>
+  <div id="posts" class="posts-expand">
+    
 
-      <span class="archive-page-counter">
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://fuyk.github.io/2017/09/01/NIO/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="FUYK">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="https://avatars2.githubusercontent.com/u/26453832?v=4&u=126bfb148df1cdfa6d48e7dd63660fd1580fd86e&s=400">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="新力量=新科技">
+    </span>
+
+    
+      <header class="post-header">
+
         
         
+          <h1 class="post-title" itemprop="name headline">NIO(-)</h1>
         
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-09-01T16:35:28+08:00">
+                2017-09-01
+              </time>
+            
+
+            
+
+            
+          </span>
+
           
-        
-        嗯..! 目前共计 11 篇日志。 继续努力。
-      </span>
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/java/" itemprop="url" rel="index">
+                    <span itemprop="name">java</span>
+                  </a>
+                </span>
 
-      
-
-        
-        
-        
-
-        
+                
+                
+              
+            </span>
           
-          <div class="collection-title">
-            <h2 class="archive-year motion-element" id="archive-year-2016">2016</h2>
-          </div>
-        
-        
 
-        
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2017/09/01/NIO/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count"
+                        data-disqus-identifier="2017/09/01/NIO/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
 
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
+          
+          
 
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/2016/09/01/JVM垃圾回收算法及回收器/" itemprop="url">
+          
+
+          
+            <div class="post-wordcount">
               
-                <span itemprop="name">JVM垃圾回收算法及回收器</span>
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计</span>
+                
+                <span title="字数统计">
+                  1,768
+                </span>
               
-            </a>
-        
-      </h2>
 
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2016-09-01T15:16:11+08:00"
-              content="2016-09-01" >
-          09-01
-        </time>
-      </div>
+              
+                <span class="post-meta-divider">|</span>
+              
 
-    </header>
-  </article>
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长</span>
+                
+                <span title="阅读时长">
+                  7
+                </span>
+              
+            </div>
+          
 
+          
 
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
 
       
-
-        
-        
-        
-
-        
-        
-
-        
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/2016/08/25/代理模式/" itemprop="url">
-              
-                <span itemprop="name">代理模式</span>
-              
-            </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2016-08-25T23:00:24+08:00"
-              content="2016-08-25" >
-          08-25
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
       
 
-        
-        
-        
-
-        
-        
-
-        
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/2016/08/22/java8时间与日期/" itemprop="url">
-              
-                <span itemprop="name">聊聊java8时间与日期</span>
-              
-            </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2016-08-22T23:23:45+08:00"
-              content="2016-08-22" >
-          08-22
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
+      
+        <p>Java 并发编程之 NIO </p>
+<p>问题来源</p>
+<p>在传统的架构中，对于客户端的每一次请求，服务器都会创建一个新的线程或者利用线程池复用去处理用户的一个请求，然后返回给用户结果，这样做在高并发的情况下会存在非常严重的性能问题：对于用户的每一次请求都创建一个新的线程是需要一定内存的，同时线程之间频繁的上下文切换也是一个很大的开销。</p>
+<p>p.s: 本文涉及的完整实例代码都可以在我的GitHub上面下载。</p>
+<p>什么是Selector</p>
+<p>NIO的核心就是Selector，读懂了Selector就理解了异步机制的实现原理，下面先来简单的介绍一下什么是Selector。现在对于客户端的每一次请求到来时我们不再立即创建一个线程进行处理，相反以epool为例子当一个事件准备就绪之后通过回调机制将描述符加入到阻塞队列中，下面只需要通过遍历阻塞队列对相应的事件进行处理就行了，通过这种回调机制整个过程都不需要对于每一个请求都去创建一个线程去单独处理。上面的解释还是有些抽象，下面我会通过具体的代码实例来解释，在这之前我们先来了解一下NIO中两个基础概念Buffer和Channel。</p>
+<p>如果大家对于多路IO复用比如select/epool完全陌生的话，建议先读一下我的这篇Linux下的五种IO模型 :-)</p>
+<p>Buffer</p>
+<p>以ByteBuffer为例子，我们可以通过ByteBuffer.allocate(n)来分配n个字节的缓冲区，对于缓冲区有四个重要的属性：</p>
+<p>capacity，缓冲区的容量，也就是我们上面指定的n。<br>position，当前指针指向的位置。<br>mark，前一个位置，这里我们下面再解释。<br>limit，最大能读取或者写入的位置。</p>
+<p><img src="/2017/09/01/NIO/NIO.jpg" alt="NIO">  </p>
+<p>如上图所示，Buffer实际上也是分为两种，一种用于写数据，一种用于读取数据。</p>
+<p>put</p>
+<p>通过直接阅读ByteBuffer源码可以清晰看出put方法是把一个byte变量x放到缓冲区中去，同时position加1：</p>
+<p>public ByteBuffer put(byte x) {<br>    hb[ix(nextPutIndex())] = x;<br>    return this;<br>}<br>final int nextPutIndex() {<br>    if (position &gt;= limit)<br>        throw new BufferOverflowException();<br>    return position++;<br>}</p>
+<p>get</p>
+<p>get方法是从缓冲区中读取一个字节，同时position加一：</p>
+<p>public byte get() {<br>    return hb[ix(nextGetIndex())];<br>}<br>final int nextGetIndex() {<br>    if (position &gt;= limit)<br>        throw new BufferUnderflowException();<br>    return position++;<br>}</p>
+<p>flip</p>
+<p>如果我们想将buffer从写数据的情况变成读数据的情况，可以直接使用flip方法：</p>
+<p>public final Buffer flip() {<br>    limit = position;<br>    position = 0;<br>    mark = -1;<br>    return this;<br>}</p>
+<p>mark和reset</p>
+<p>mark是记住当前的位置用的，也就是保存position的值：</p>
+<p>public final Buffer mark() {<br>    mark = position;<br>    return this;<br>}</p>
+<p>如果我们在对缓冲区读写之前就调用了mark方法，那么以后当position位置变化之后，想回到之前的位置可以调用reset会将mark的值重新赋给position：</p>
+<p>public final Buffer reset() {<br>    int m = mark;<br>    if (m &lt; 0)<br>        throw new InvalidMarkException();<br>    position = m;<br>    return this;<br>}</p>
+<p>Channel</p>
+<p><img src="/2017/09/01/NIO/NIOC.jpg" alt="NIOC">  </p>
+<p>利用NIO，当我们读取数据的时候，会先从buffer加载到channel，而写入数据的时候，会先入到channel然后通过channel转移到buffer中去。channel给我们提供了两个方法：通过channel.read(buffer)可以将channel中的数据写入到buffer中，而通过channel.write(buffer)则可以将buffer中的数据写入到到channel中。</p>
+<p>Channel的话分为四种：</p>
+<p>FileChannel从文件中读写数据。<br>DatagramChannel以UDP的形式从网络中读写数据。<br>SocketChannel以TCP的形式从网络中读写数据。<br>ServerSocketChannel允许你监听TCP连接。</p>
+<p>因为今天我们的重点是Selector，所以来看一下SocketChannel的用法。在下面的代码利用SocketChannel模拟了一个简单的server-client程序。</p>
+<p>WebServer的代码如下，和传统的sock程序并没有太多的差异，只是我们引入了buffer和channel的概念：</p>
+<p>ServerSocketChannel ssc = ServerSocketChannel.open();<br>ssc.socket().bind(new InetSocketAddress(“127.0.0.1”, 5000));<br>SocketChannel socketChannel = ssc.accept();<br>ByteBuffer readBuffer = ByteBuffer.allocate(128);<br>socketChannel.read(readBuffer);<br>readBuffer.flip();<br>while (readBuffer.hasRemaining()) {<br>    System.out.println((char)readBuffer.get());<br>}<br>socketChannel.close();<br>ssc.close();</p>
+<p>WebClient的代码如下：</p>
+<p>SocketChannel socketChannel = null;<br>socketChannel = SocketChannel.open();<br>socketChannel.connect(new InetSocketAddress(“127.0.0.1”, 5000));<br>ByteBuffer writeBuffer = ByteBuffer.allocate(128);<br>writeBuffer.put(“hello world”.getBytes());<br>writeBuffer.flip();<br>socketChannel.write(writeBuffer);<br>socketChannel.close();</p>
+<p>Scatter / Gather</p>
+<p>在上面的client程序中，我们也可以同时将多个buffer中的数据放入到一个数组后然后统一放入到channel后传递给服务器：</p>
+<p>ByteBuffer buffer1 = ByteBuffer.allocate(128);<br>ByteBuffer buffer2 = ByteBuffer.allocate(16);<br>buffer1.put(“hello “.getBytes());<br>buffer2.put(“world”.getBytes());<br>buffer1.flip();<br>buffer2.flip();<br>ByteBuffer[] bufferArray = {buffer1, buffer2};<br>socketChannel.write(bufferArray);</p>
+<p>Selector</p>
+<p><img src="/2017/09/01/NIO/NIOS.jpg" alt="NIOS">  </p>
+<p>通过使用selector，我们可以通过一个线程来同时管理多个channel，省去了创建线程以及线程之间进行上下文切换的开销。</p>
+<p>创建一个selector</p>
+<p>通过调用selector类的静态方法open我们就可以创建一个selector对象：</p>
+<p>Selector selector = Selector.open();</p>
+<p>注册channel</p>
+<p>为了保证selector能够监听多个channel，我们需要将channel注册到selector当中：</p>
+<p>channel.configureBlocking(false);<br>SelectionKey key = channel.register(selector, SelectionKey.OP_READ);</p>
+<p>我们可以监听四种事件：</p>
+<p>SelectionKey.OP_CONNECT：当客户端的尝试连接到服务器<br>SelectionKey.OP_ACCEPT：当服务器接受来自客户端的请求<br>SelectionKey.OP_READ：当服务器可以从channel中读取数据<br>SelectionKey.OP_WRITE：当服务器可以向channel中写入数据</p>
+<p>对SelectorKey调用channel方法可以得到key对应的channel:</p>
+<p>Channel channel = key.channel();</p>
+<p>而key自身感兴趣的监听事件也可以通过interestOps来获得：</p>
+<p>int interestSet = selectionKey.interestOps();</p>
+<p>对selector调用selectedKeys()方法我们可以得到注册的所有key：</p>
+<p>Set<selectionkey> selectedKeys = selector.selectedKeys();</selectionkey></p>
+<p>实战</p>
+<p>服务器的代码如下：</p>
+<p>ServerSocketChannel ssc = ServerSocketChannel.open();<br>ssc.socket().bind(new InetSocketAddress(“127.0.0.1”, 5000));<br>ssc.configureBlocking(false);<br>Selector selector = Selector.open();<br>ssc.register(selector, SelectionKey.OP_ACCEPT);<br>ByteBuffer readBuff = ByteBuffer.allocate(128);<br>ByteBuffer writeBuff = ByteBuffer.allocate(128);<br>writeBuff.put(“received”.getBytes());<br>writeBuff.flip(); // make buffer ready for reading<br>while (true) {<br>    selector.select();<br>    Set<selectionkey> keys = selector.selectedKeys();<br>    Iterator<selectionkey> it = keys.iterator();<br>    while (it.hasNext()) {<br>        SelectionKey key = it.next();<br>        it.remove();<br>        if (key.isAcceptable()) {<br>            SocketChannel socketChannel = ssc.accept();<br>            socketChannel.configureBlocking(false);<br>            socketChannel.register(selector, SelectionKey.OP_READ);<br>        } else if (key.isReadable()) {<br>            SocketChannel socketChannel = (SocketChannel) key.channel();<br>            readBuff.clear(); // make buffer ready for writing<br>            socketChannel.read(readBuff);<br>            readBuff.flip(); // make buffer ready for reading<br>            System.out.println(new String(readBuff.array()));<br>            key.interestOps(SelectionKey.OP_WRITE);<br>        } else if (key.isWritable()) {<br>                writeBuff.rewind(); // sets the position back to 0<br>                SocketChannel socketChannel = (SocketChannel) key.channel();<br>                socketChannel.write(writeBuff);<br>                key.interestOps(SelectionKey.OP_READ);<br>        }<br>    }<br>}</selectionkey></selectionkey></p>
+<p>客户端程序的代码如下，各位读者可以同时在终端下面多开几个程序来同时模拟多个请求，而对于多个客户端的程序我们的服务器始终只用一个线程来处理多个请求。一个很常见的应用场景就是多个用户同时往服务器上传文件，对于每一个上传请求我们不在单独去创建一个线程去处理，同时利用Executor/Future我们也可以不用阻塞在IO操作中而是立即返回用户结果。</p>
+<p>SocketChannel socketChannel = SocketChannel.open();<br>socketChannel.connect(new InetSocketAddress(“127.0.0.1”, 5000));<br>ByteBuffer writeBuffer = ByteBuffer.allocate(32);<br>ByteBuffer readBuffer = ByteBuffer.allocate(32);<br>writeBuffer.put(“hello”.getBytes());<br>writeBuffer.flip(); // make buffer ready for reading<br>while (true) {<br>    writeBuffer.rewind(); // sets the position back to 0<br>    socketChannel.write(writeBuffer); // hello<br>    readBuffer.clear(); // make buffer ready for writing<br>    socketChannel.read(readBuffer); // recieved<br>}</p>
 
       
-
-        
-        
-        
-
-        
-        
-
-        
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/2016/07/01/Java反射实践/" itemprop="url">
-              
-                <span itemprop="name">Java反射实践</span>
-              
-            </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2016-07-01T15:50:47+08:00"
-              content="2016-07-01" >
-          07-01
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
-      
-
     </div>
+    
+    
+    
+
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>坚持原创分享，谢谢您的支持将鼓励我继续创作，可以点击下面Donate激励我！</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>Donate</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/wechatpay.jpg" alt="FUYK WeChat Pay"/>
+        <p>WeChat Pay</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/images/alipay.jpg" alt="FUYK Alipay"/>
+        <p>Alipay</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+	<div>
+	
+    <div>
+    
+        <div style="text-align:center;color: #ccc;font-size:14px;">-------------本文结束<i class="fa fa-paw"></i>感谢您的阅读-------------</div>
+    
+</div>
+	
+	</div>
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/NIO/" rel="tag"><i class="fa fa-tag"></i> NIO</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/08/26/时间观念/" rel="next" title="时间观念">
+                <i class="fa fa-chevron-left"></i> 时间观念
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
   </div>
   
   
   
+  </article>
 
-  
 
+
+    <div class="post-spread">
+      
+        <!-- JiaThis Button BEGIN -->
+<div class="jiathis_style">
+  <a class="jiathis_button_tsina"></a>
+  <a class="jiathis_button_tqq"></a>
+  <a class="jiathis_button_weixin"></a>
+  <a class="jiathis_button_cqq"></a>
+  <a class="jiathis_button_douban"></a>
+  <a class="jiathis_button_renren"></a>
+  <a class="jiathis_button_qzone"></a>
+  <a class="jiathis_button_kaixin001"></a>
+  <a class="jiathis_button_copy"></a>
+  <a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jiathis_separator jtico jtico_jiathis" target="_blank"></a>
+  <a class="jiathis_counter_style"></a>
+</div>
+<script type="text/javascript" >
+  var jiathis_config={
+    hideMore:false
+  }
+</script>
+<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js" charset="utf-8"></script>
+<!-- JiaThis Button END -->
+
+      
+    </div>
+  </div>
 
 
           </div>
@@ -524,6 +679,18 @@
 
 
           
+  <div class="comments" id="comments">
+    
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+    
+  </div>
+  
+
 
         </div>
         
@@ -799,11 +966,9 @@
 
 
   
-  
-    <script type="text/javascript" id="motion.page.archive">
-      $('.archive-year').velocity('transition.slideLeftIn');
-    </script>
-  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
+
 
 
   
@@ -822,6 +987,18 @@
       <script id="dsq-count-scr" src="https://ErryLee.disqus.com/count.js" async></script>
     
 
+    
+      <script type="text/javascript">
+        var disqus_config = function () {
+          this.page.url = 'http://fuyk.github.io/2017/09/01/NIO/';
+          this.page.identifier = '2017/09/01/NIO/';
+          this.page.title = 'NIO(-)';
+        };
+        var d = document, s = d.createElement('script');
+        s.src = 'https://ErryLee.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', '' + +new Date());
+        (d.head || d.body).appendChild(s);
+      </script>
     
 
   

@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://fuyk.github.io/"/>
-  <updated>2017-08-26T13:50:42.249Z</updated>
+  <updated>2017-09-01T08:41:27.623Z</updated>
   <id>http://fuyk.github.io/</id>
   
   <author>
@@ -14,6 +14,91 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>NIO(-)</title>
+    <link href="http://fuyk.github.io/2017/09/01/NIO/"/>
+    <id>http://fuyk.github.io/2017/09/01/NIO/</id>
+    <published>2017-09-01T08:35:28.000Z</published>
+    <updated>2017-09-01T08:41:27.623Z</updated>
+    
+    <content type="html"><![CDATA[<p>Java 并发编程之 NIO </p>
+<p>问题来源</p>
+<p>在传统的架构中，对于客户端的每一次请求，服务器都会创建一个新的线程或者利用线程池复用去处理用户的一个请求，然后返回给用户结果，这样做在高并发的情况下会存在非常严重的性能问题：对于用户的每一次请求都创建一个新的线程是需要一定内存的，同时线程之间频繁的上下文切换也是一个很大的开销。</p>
+<p>p.s: 本文涉及的完整实例代码都可以在我的GitHub上面下载。</p>
+<p>什么是Selector</p>
+<p>NIO的核心就是Selector，读懂了Selector就理解了异步机制的实现原理，下面先来简单的介绍一下什么是Selector。现在对于客户端的每一次请求到来时我们不再立即创建一个线程进行处理，相反以epool为例子当一个事件准备就绪之后通过回调机制将描述符加入到阻塞队列中，下面只需要通过遍历阻塞队列对相应的事件进行处理就行了，通过这种回调机制整个过程都不需要对于每一个请求都去创建一个线程去单独处理。上面的解释还是有些抽象，下面我会通过具体的代码实例来解释，在这之前我们先来了解一下NIO中两个基础概念Buffer和Channel。</p>
+<p>如果大家对于多路IO复用比如select/epool完全陌生的话，建议先读一下我的这篇Linux下的五种IO模型 :-)</p>
+<p>Buffer</p>
+<p>以ByteBuffer为例子，我们可以通过ByteBuffer.allocate(n)来分配n个字节的缓冲区，对于缓冲区有四个重要的属性：</p>
+<p>capacity，缓冲区的容量，也就是我们上面指定的n。<br>position，当前指针指向的位置。<br>mark，前一个位置，这里我们下面再解释。<br>limit，最大能读取或者写入的位置。</p>
+<p><img src="/2017/09/01/NIO/NIO.jpg" alt="NIO">  </p>
+<p>如上图所示，Buffer实际上也是分为两种，一种用于写数据，一种用于读取数据。</p>
+<p>put</p>
+<p>通过直接阅读ByteBuffer源码可以清晰看出put方法是把一个byte变量x放到缓冲区中去，同时position加1：</p>
+<p>public ByteBuffer put(byte x) {<br>    hb[ix(nextPutIndex())] = x;<br>    return this;<br>}<br>final int nextPutIndex() {<br>    if (position &gt;= limit)<br>        throw new BufferOverflowException();<br>    return position++;<br>}</p>
+<p>get</p>
+<p>get方法是从缓冲区中读取一个字节，同时position加一：</p>
+<p>public byte get() {<br>    return hb[ix(nextGetIndex())];<br>}<br>final int nextGetIndex() {<br>    if (position &gt;= limit)<br>        throw new BufferUnderflowException();<br>    return position++;<br>}</p>
+<p>flip</p>
+<p>如果我们想将buffer从写数据的情况变成读数据的情况，可以直接使用flip方法：</p>
+<p>public final Buffer flip() {<br>    limit = position;<br>    position = 0;<br>    mark = -1;<br>    return this;<br>}</p>
+<p>mark和reset</p>
+<p>mark是记住当前的位置用的，也就是保存position的值：</p>
+<p>public final Buffer mark() {<br>    mark = position;<br>    return this;<br>}</p>
+<p>如果我们在对缓冲区读写之前就调用了mark方法，那么以后当position位置变化之后，想回到之前的位置可以调用reset会将mark的值重新赋给position：</p>
+<p>public final Buffer reset() {<br>    int m = mark;<br>    if (m &lt; 0)<br>        throw new InvalidMarkException();<br>    position = m;<br>    return this;<br>}</p>
+<p>Channel</p>
+<p><img src="/2017/09/01/NIO/NIOC.jpg" alt="NIOC">  </p>
+<p>利用NIO，当我们读取数据的时候，会先从buffer加载到channel，而写入数据的时候，会先入到channel然后通过channel转移到buffer中去。channel给我们提供了两个方法：通过channel.read(buffer)可以将channel中的数据写入到buffer中，而通过channel.write(buffer)则可以将buffer中的数据写入到到channel中。</p>
+<p>Channel的话分为四种：</p>
+<p>FileChannel从文件中读写数据。<br>DatagramChannel以UDP的形式从网络中读写数据。<br>SocketChannel以TCP的形式从网络中读写数据。<br>ServerSocketChannel允许你监听TCP连接。</p>
+<p>因为今天我们的重点是Selector，所以来看一下SocketChannel的用法。在下面的代码利用SocketChannel模拟了一个简单的server-client程序。</p>
+<p>WebServer的代码如下，和传统的sock程序并没有太多的差异，只是我们引入了buffer和channel的概念：</p>
+<p>ServerSocketChannel ssc = ServerSocketChannel.open();<br>ssc.socket().bind(new InetSocketAddress(“127.0.0.1”, 5000));<br>SocketChannel socketChannel = ssc.accept();<br>ByteBuffer readBuffer = ByteBuffer.allocate(128);<br>socketChannel.read(readBuffer);<br>readBuffer.flip();<br>while (readBuffer.hasRemaining()) {<br>    System.out.println((char)readBuffer.get());<br>}<br>socketChannel.close();<br>ssc.close();</p>
+<p>WebClient的代码如下：</p>
+<p>SocketChannel socketChannel = null;<br>socketChannel = SocketChannel.open();<br>socketChannel.connect(new InetSocketAddress(“127.0.0.1”, 5000));<br>ByteBuffer writeBuffer = ByteBuffer.allocate(128);<br>writeBuffer.put(“hello world”.getBytes());<br>writeBuffer.flip();<br>socketChannel.write(writeBuffer);<br>socketChannel.close();</p>
+<p>Scatter / Gather</p>
+<p>在上面的client程序中，我们也可以同时将多个buffer中的数据放入到一个数组后然后统一放入到channel后传递给服务器：</p>
+<p>ByteBuffer buffer1 = ByteBuffer.allocate(128);<br>ByteBuffer buffer2 = ByteBuffer.allocate(16);<br>buffer1.put(“hello “.getBytes());<br>buffer2.put(“world”.getBytes());<br>buffer1.flip();<br>buffer2.flip();<br>ByteBuffer[] bufferArray = {buffer1, buffer2};<br>socketChannel.write(bufferArray);</p>
+<p>Selector</p>
+<p><img src="/2017/09/01/NIO/NIOS.jpg" alt="NIOS">  </p>
+<p>通过使用selector，我们可以通过一个线程来同时管理多个channel，省去了创建线程以及线程之间进行上下文切换的开销。</p>
+<p>创建一个selector</p>
+<p>通过调用selector类的静态方法open我们就可以创建一个selector对象：</p>
+<p>Selector selector = Selector.open();</p>
+<p>注册channel</p>
+<p>为了保证selector能够监听多个channel，我们需要将channel注册到selector当中：</p>
+<p>channel.configureBlocking(false);<br>SelectionKey key = channel.register(selector, SelectionKey.OP_READ);</p>
+<p>我们可以监听四种事件：</p>
+<p>SelectionKey.OP_CONNECT：当客户端的尝试连接到服务器<br>SelectionKey.OP_ACCEPT：当服务器接受来自客户端的请求<br>SelectionKey.OP_READ：当服务器可以从channel中读取数据<br>SelectionKey.OP_WRITE：当服务器可以向channel中写入数据</p>
+<p>对SelectorKey调用channel方法可以得到key对应的channel:</p>
+<p>Channel channel = key.channel();</p>
+<p>而key自身感兴趣的监听事件也可以通过interestOps来获得：</p>
+<p>int interestSet = selectionKey.interestOps();</p>
+<p>对selector调用selectedKeys()方法我们可以得到注册的所有key：</p>
+<p>Set<selectionkey> selectedKeys = selector.selectedKeys();</selectionkey></p>
+<p>实战</p>
+<p>服务器的代码如下：</p>
+<p>ServerSocketChannel ssc = ServerSocketChannel.open();<br>ssc.socket().bind(new InetSocketAddress(“127.0.0.1”, 5000));<br>ssc.configureBlocking(false);<br>Selector selector = Selector.open();<br>ssc.register(selector, SelectionKey.OP_ACCEPT);<br>ByteBuffer readBuff = ByteBuffer.allocate(128);<br>ByteBuffer writeBuff = ByteBuffer.allocate(128);<br>writeBuff.put(“received”.getBytes());<br>writeBuff.flip(); // make buffer ready for reading<br>while (true) {<br>    selector.select();<br>    Set<selectionkey> keys = selector.selectedKeys();<br>    Iterator<selectionkey> it = keys.iterator();<br>    while (it.hasNext()) {<br>        SelectionKey key = it.next();<br>        it.remove();<br>        if (key.isAcceptable()) {<br>            SocketChannel socketChannel = ssc.accept();<br>            socketChannel.configureBlocking(false);<br>            socketChannel.register(selector, SelectionKey.OP_READ);<br>        } else if (key.isReadable()) {<br>            SocketChannel socketChannel = (SocketChannel) key.channel();<br>            readBuff.clear(); // make buffer ready for writing<br>            socketChannel.read(readBuff);<br>            readBuff.flip(); // make buffer ready for reading<br>            System.out.println(new String(readBuff.array()));<br>            key.interestOps(SelectionKey.OP_WRITE);<br>        } else if (key.isWritable()) {<br>                writeBuff.rewind(); // sets the position back to 0<br>                SocketChannel socketChannel = (SocketChannel) key.channel();<br>                socketChannel.write(writeBuff);<br>                key.interestOps(SelectionKey.OP_READ);<br>        }<br>    }<br>}</selectionkey></selectionkey></p>
+<p>客户端程序的代码如下，各位读者可以同时在终端下面多开几个程序来同时模拟多个请求，而对于多个客户端的程序我们的服务器始终只用一个线程来处理多个请求。一个很常见的应用场景就是多个用户同时往服务器上传文件，对于每一个上传请求我们不在单独去创建一个线程去处理，同时利用Executor/Future我们也可以不用阻塞在IO操作中而是立即返回用户结果。</p>
+<p>SocketChannel socketChannel = SocketChannel.open();<br>socketChannel.connect(new InetSocketAddress(“127.0.0.1”, 5000));<br>ByteBuffer writeBuffer = ByteBuffer.allocate(32);<br>ByteBuffer readBuffer = ByteBuffer.allocate(32);<br>writeBuffer.put(“hello”.getBytes());<br>writeBuffer.flip(); // make buffer ready for reading<br>while (true) {<br>    writeBuffer.rewind(); // sets the position back to 0<br>    socketChannel.write(writeBuffer); // hello<br>    readBuffer.clear(); // make buffer ready for writing<br>    socketChannel.read(readBuffer); // recieved<br>}</p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;Java 并发编程之 NIO &lt;/p&gt;
+&lt;p&gt;问题来源&lt;/p&gt;
+&lt;p&gt;在传统的架构中，对于客户端的每一次请求，服务器都会创建一个新的线程或者利用线程池复用去处理用户的一个请求，然后返回给用户结果，这样做在高并发的情况下会存在非常严重的性能问题：对于用户的每一次请求都创建一个
+    
+    </summary>
+    
+      <category term="java" scheme="http://fuyk.github.io/categories/java/"/>
+    
+    
+      <category term="NIO" scheme="http://fuyk.github.io/tags/NIO/"/>
+    
+  </entry>
   
   <entry>
     <title>时间观念</title>
