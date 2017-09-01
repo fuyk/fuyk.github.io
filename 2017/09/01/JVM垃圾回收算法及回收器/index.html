@@ -102,7 +102,7 @@
 <link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="Linux," />
+  <meta name="keywords" content="jvm," />
 
 
 
@@ -120,18 +120,18 @@
 
 
 
-<meta name="description" content="先说明本文：图片没有贴出，大家认真阅读不影响 一 ：为什么学Linux 　　Linux的历史发展大家可以百度一些，了解了解就ok,学利用一切可以利用的资源； 　　1.Linux的特点： 　　第一： 免费开源，了解它的发展就知道为什么开源了，一款完全的免费的操作系统，都可以下载它的源码，没有什么限制。 　　 　　第二：  模块化程度高。 Linux 的 内核 设计 分成 进程 管理、 内存 管理、进">
-<meta name="keywords" content="Linux">
+<meta name="description" content="本文主要讲述JVM中几种常见的垃圾回收算法和相关的垃圾回收器，以及常见的和GC相关的性能调优参数。 GC Roots 我们先来了解一下在Java中是如何判断一个对象的生死的，有些语言比如Python是采用引用计数来统计的，但是这种做法可能会遇见循环引用的问题，在Java以及C#等语言中是采用GC Roots来解决这个问题。如果一个对象和GC Roots之间没有链接，那么这个对象也可以被视作是一个可">
+<meta name="keywords" content="jvm">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Linux（一）">
-<meta property="og:url" content="http://fuyk.github.io/2017/08/25/Linux（一）/index.html">
+<meta property="og:title" content="JVM垃圾回收算法及回收器">
+<meta property="og:url" content="http://fuyk.github.io/2017/09/01/JVM垃圾回收算法及回收器/index.html">
 <meta property="og:site_name" content="新力量=新科技">
-<meta property="og:description" content="先说明本文：图片没有贴出，大家认真阅读不影响 一 ：为什么学Linux 　　Linux的历史发展大家可以百度一些，了解了解就ok,学利用一切可以利用的资源； 　　1.Linux的特点： 　　第一： 免费开源，了解它的发展就知道为什么开源了，一款完全的免费的操作系统，都可以下载它的源码，没有什么限制。 　　 　　第二：  模块化程度高。 Linux 的 内核 设计 分成 进程 管理、 内存 管理、进">
+<meta property="og:description" content="本文主要讲述JVM中几种常见的垃圾回收算法和相关的垃圾回收器，以及常见的和GC相关的性能调优参数。 GC Roots 我们先来了解一下在Java中是如何判断一个对象的生死的，有些语言比如Python是采用引用计数来统计的，但是这种做法可能会遇见循环引用的问题，在Java以及C#等语言中是采用GC Roots来解决这个问题。如果一个对象和GC Roots之间没有链接，那么这个对象也可以被视作是一个可">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2017-08-31T13:01:52.095Z">
+<meta property="og:updated_time" content="2017-09-01T07:18:37.449Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Linux（一）">
-<meta name="twitter:description" content="先说明本文：图片没有贴出，大家认真阅读不影响 一 ：为什么学Linux 　　Linux的历史发展大家可以百度一些，了解了解就ok,学利用一切可以利用的资源； 　　1.Linux的特点： 　　第一： 免费开源，了解它的发展就知道为什么开源了，一款完全的免费的操作系统，都可以下载它的源码，没有什么限制。 　　 　　第二：  模块化程度高。 Linux 的 内核 设计 分成 进程 管理、 内存 管理、进">
+<meta name="twitter:title" content="JVM垃圾回收算法及回收器">
+<meta name="twitter:description" content="本文主要讲述JVM中几种常见的垃圾回收算法和相关的垃圾回收器，以及常见的和GC相关的性能调优参数。 GC Roots 我们先来了解一下在Java中是如何判断一个对象的生死的，有些语言比如Python是采用引用计数来统计的，但是这种做法可能会遇见循环引用的问题，在Java以及C#等语言中是采用GC Roots来解决这个问题。如果一个对象和GC Roots之间没有链接，那么这个对象也可以被视作是一个可">
 
 
 
@@ -160,13 +160,13 @@
 
 
 
-  <link rel="canonical" href="http://fuyk.github.io/2017/08/25/Linux（一）/"/>
+  <link rel="canonical" href="http://fuyk.github.io/2017/09/01/JVM垃圾回收算法及回收器/"/>
 
 
 
 
 
-  <title>Linux（一） | 新力量=新科技</title>
+  <title>JVM垃圾回收算法及回收器 | 新力量=新科技</title>
   
 
 
@@ -357,7 +357,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://fuyk.github.io/2017/08/25/Linux（一）/">
+    <link itemprop="mainEntityOfPage" href="http://fuyk.github.io/2017/09/01/JVM垃圾回收算法及回收器/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="FUYK">
@@ -374,7 +374,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">Linux（一）</h1>
+          <h1 class="post-title" itemprop="name headline">JVM垃圾回收算法及回收器</h1>
         
 
         <div class="post-meta">
@@ -386,8 +386,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-08-25T23:36:28+08:00">
-                2017-08-25
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-09-01T15:16:11+08:00">
+                2017-09-01
               </time>
             
 
@@ -409,8 +409,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/linux/" itemprop="url" rel="index">
-                    <span itemprop="name">linux</span>
+                  <a href="/categories/jvm/" itemprop="url" rel="index">
+                    <span itemprop="name">jvm</span>
                   </a>
                 </span>
 
@@ -427,9 +427,9 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2017/08/25/Linux（一）/#comments" itemprop="discussionUrl">
+                <a href="/2017/09/01/JVM垃圾回收算法及回收器/#comments" itemprop="discussionUrl">
                   <span class="post-comments-count disqus-comment-count"
-                        data-disqus-identifier="2017/08/25/Linux（一）/" itemprop="commentCount"></span>
+                        data-disqus-identifier="2017/09/01/JVM垃圾回收算法及回收器/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -451,7 +451,7 @@
                   <span class="post-meta-item-text">字数统计</span>
                 
                 <span title="字数统计">
-                  2,867
+                  4,212
                 </span>
               
 
@@ -467,7 +467,7 @@
                   <span class="post-meta-item-text">阅读时长</span>
                 
                 <span title="阅读时长">
-                  10
+                  15
                 </span>
               
             </div>
@@ -488,71 +488,56 @@
       
 
       
-        <p>先说明本文：图片没有贴出，大家认真阅读不影响</p>
-<pre><code>一 ：为什么学Linux
-</code></pre><p>　　Linux的历史发展大家可以百度一些，了解了解就ok,学利用一切可以利用的资源；</p>
-<p>　　1.Linux的特点：</p>
-<p>　　第一： 免费开源，了解它的发展就知道为什么开源了，一款完全的免费的操作系统，都可以下载它的源码，没有什么限制。</p>
-<p>　　</p>
-<p>　　第二：  模块化程度高。 Linux 的 内核 设计 分成 进程 管理、 内存 管理、进程 间 通信、 虚拟 文件 系统、 网络 5 部分， 其 采用 的 模块 机制 使得 用户 可以 根据 实际</p>
-<p>　　　　　  需要， 在 内核 中 插入 或 移走 模块， 这使 得 内核 可以 被 高度 的 剪裁 定制， 以 方便 在 不同 的 场景 下 使用。</p>
-<p>.　　</p>
-<p>　　第三： 广泛 的 硬件 支持。 得 益于 其 免费 开源 的 特点， 有 大批 程序员 不断 地 向 Linux 社区 提供 代码， 使得 Linux 有着 异常 丰富 的 设备 驱动 资源， 对 主流 硬件 　　　　　　的 支持 极好， 而且 几乎 能 运行 在 所有 流行 的 处理器 上。</p>
-<p>　　</p>
-<p>　　第四：  安全 稳定。 Linux 采取 了 很多 安全 技术 措施， 包括 读写 权限 控制、 带 保护 的 子系统、 审计 跟踪、 核心 授权 等， 这 为 网络 环境 中的 用户 提供 了</p>
-<p>　　　　　  安全保障。 实际 上有 很多 运行 Linux 的 服务器 可以 持续 运行 长达 数年 而 无须 重 启， 依然 可以 性能 良好 地 提供 服务， 其 安全 稳定性 已经 在各 个领域 　　　　　  得到 了 广泛 的 证实。</p>
-<p>　　第五： 多用户， 多任务。 多用户 是指 系统 资源 可以 同时 被 不同 的 用户 使用， 每个 用户 对 自己的 资源 有 特定 的 权限， 互不 影响。 多任务 是 现代化 计算机的 　　　　　 主要 特点， 指的 是 计算 机能 同时 运行 多个 程序， 且 程序 之间 彼此 独立， Linux 内核 负责 调度 每个 进程， 使之 平等 地 访问 处理器。 由于 CPU 处理</p>
-<p>　　　　　 速度 极快， 从 用户 的 角度 来看 所有 的 进程 好像 在 并行 运行。</p>
-<p>　　 第六：  良好 的 可移植性。 Linux 中 95% 以上 的 代码 都是 用 C 语言 编写 的， 由于 C 语言 是一 种 机器 无关 的 高级 语言， 是 可 移植 的， 因此 Linux 系统 也是</p>
-<p>　　　　　　移植的</p>
-<p>　　1.2Linux优点：　　　　　　　　</p>
-<p>　　　　　　稳定、免费或者花费少</p>
-<p>　　　　　　安全性高</p>
-<pre><code>  　　　　多任务，多用户
-   　　　  耗资源少
-
- 　　　　由于内核小，所以它可以支持多种电子产品，如：Android手机、PDA等
-</code></pre><p>　　 </p>
-<p>　　　1.3安装（建议初学者可以以下）</p>
-<p>　　　　　　在安装Linux系统之前，先来了解windows系统结构，windows系统一般是安装在C盘系统盘，同样Linux也有类似的系统盘（/根分区），Linux通常分区为（根分区/、swap分区），Linux系统以文件的存储方式，所有的文件都是存储在某个目录下的，类似于windows的文件夹。<br>对于文件系统的属性来说，windows文件系统类型一般是ntfs、fat32等，而Linux文件系统类型则为ext2、ext3、ext4等（文件系统：是操作系统用于明确磁盘或分区上的文件的方法和数据结构，文件系统由三部分组成：与文件管理有关软件、被管理文件以及实施文件管理所需数据结构。）<br>安装 Linux系统是每一个初学者的第一个门槛。在这个过程中间，最大的困惑莫过于给硬盘进行分区。虽然现在各种发行版本的 Linux 已经提供了友好的图形交互界面，但是很多人还是感觉无从下手。这其中的原因主要是不清楚 Linux 的分区规定。就好比如果我们了解了windows分区的规则，系统盘C、数据盘D等，就很好分区了。<br>在 Linux 中规定，每一个硬盘设备最多只能有 4个主分区（其中包含扩展分区）构成，任何一个扩展分区都要占用一个主分区号码，也就是在一个硬盘中，主分区和扩展分区一共最多是 4 个。<br>下面正式来安装Linux系统，安装系统前需要准备如下软件：<br> VMware workstation 10.0（可以百度一下）<br>CentOS 5.8 x86_i386.i或redhat（Linux官网下载）</p>
-<p>说明：可能随时间更新版本可能安装有一定差异，不过换汤不换药，相信我们这些IT男的头脑这so easy。</p>
-<p>　1. 3. 1 　 安装 前 的 规划</p>
-<p>　　　　　可能会有读者正计划学习Linux 而苦恼于 不知道 使用 哪一个 发行 版， 其实 所有 的 发行 版 不管 是 RedHat、 CentOS 还是 Ubuntu， 其内 核 都是 来自 Linux 　　　　　内核 官 网（ www. kernel. org）， 不同 发行 版 之间 的 差别 在于 软件 管理 的 不同， 所以 不管 使用 哪一个 发行 版， 只要 理解 其 原理 之后， 各类 发行 版 　　　　　的 区别 其实 不大。 当然 对于 初学者 来说， 拥有 广泛 的 学习 资源 也是 很重 要的。 由于 RedHat 公司 进行 了 大力 商业 推广， 且 得 益于 其 成熟 的 认证 　　　　　体系， 因此 使用 RedHat 的 用户 比较 多， 同时， 它 还有 丰富 的 相关 技术 文档， 以及 活跃 的 社区， 所以 作为 入门 学习， 可以 使用 RedHat。</p>
-<p>　　　　   不过年来，CentOS 发展 也 很 迅猛， 这个 发行 版 和 RedHat 几乎 完全 一样， 而且 在 某些方面 还 比 RedHat 略胜一筹， 所以 在 本书 中 后面 的 所有 内容 　　　　   中将 主要 使用 版本 为 5. 5 的 CentOS， 小部分 涉及 RedHat 的 内容 也 将 采用 5. 5 版本。 有 读者 可能 会 考虑 在 一台 计算 机上 安装 多个 操作系统， 　　　　   比如说 在 自己的 家用 计算 机上 安装 Windows 用于 娱乐 和 日常 应用 或 Windows 环境 下 的 开发 等， 另外 再 安装 Linux 系统 用于 学习。 在 这种 情况下， 　　        最简单 的 安装 方法 是 先 安装 Windows， 后 安装 Linux， 这样 开机 的 时候 就 自动 出现 操作系统 选择 条， 可以 根据 实际需要 选择 进入 不同 的 操作系统。               由于 Linux 对 系统 的 需求 并不 高， 所以 几乎 所有 计算机 都可以 安装， 但是 考虑到 入门 学习 Linux 需要 用到 图形 界面， 所以 建议 最好 不要 低于 以下</p>
-<p>　　　　配置： CPU， P- 3 800MHz； 内存， 1GB； 硬盘， 40GB。</p>
-<p> 　　　　　　</p>
-<p>　　　　在 安装 Linux 的 过程中， 必须 要有 的 两个 分区 为 根 分区（/） 和 swap 分区（ 交换 分区）， 当然 还有 一些 其他 的 分区 可以 独立 出来， 比如说/ boot 分区、/ var 分区 等。 另外， 这里 介绍 几个 概念， 便于 大家 理解 后面 即将 出现 的 一些 专业 词汇。 什么 是 交换 分区？ 交换 分区 是一 个 特殊 的 分区， 它的 作用 相当于 Windows 下 的 虚拟 内存， 这个 分区 的 大小 一般 设置 为 物理 内存 的 两倍， 但是 不管 物理 内存 有 多大， 交换 分区 建议 不要 超过 8GB， 因为 大于 8GB 的 交换 分区 其实 并没有 多大 实际意义。 什么 是 Grub？ Grub 是一 个 系统 引导 工具， 通过 它可 以 加载 内核， 从而</p>
-<p>在 安装 Linux 的 过程中， 必须 要有 的 两个 分区 为 根 分区（/） 和 swap 分区（ 交换 分区）， 当然 还有 一些 其他 的 分区 可以 独立 出来， 比如说/ boot 分区、/ var 分区 等。 另外， 这里 介绍 几个 概念， 便于 大家 理解 后面 即将 出现 的 一些 专业 词汇。 什么 是 交换 分区？ 交换 分区 是一 个 特殊 的 分区， 它的 作用 相当于 Windows 下 的 虚拟 内存， 这个 分区 的 大小 一般 设置 为 物理 内存 的 两倍， 但是 不管 物理 内存 有 多大， 交换 分区 建议 不要 超过 8GB， 因为 大于 8GB 的 交换 分区 其实 并没有 多大 实际意义。 什么 是 Grub？ Grub 是一 个 系统 引导 工具， 通过 它可 以 加载 内核， 从而</p>
-<p>引导 系统 启动。</p>
-<p>　　什么 是/ boot 分区？/ boot 分区 用于 放置 Linux 启动 所 用到 的 文件， 如 kernel 和 initrd 文件。 什么 是 DHCP？ DHCP 是 Dynamic Host Configuration Protocol 的 简写， 中文 称为 动态 主机 配置 协议。 在 TCP/ IP 网络 中， 每 台 主机 都 需要 有 IP 地址 才能 与其 他 主机 通信， 在 一个 大规模 的 网络 中， 如果 由 管理员 手动 地 对 每一 台 主机 进行 IP 地址 配置 是 不现实 的。 由此 也就 产生了 DHCP 协议， 可用 它来</p>
-<ol>
-<li><ol>
-<li>2 　 安装 RedHat</li>
-</ol>
-</li>
-</ol>
-<p>　　</p>
-<p>　　本节 将 演示 安装 RedHat 系统 的 过程， 使 用到 的 版本 是 RedHat 5. 5。 大家 可以 先到 网上 下载 RedHat 5. 5 操作系统 的 ISO 文件， 然后 刻成 光盘 再 安装。 当然 不要 忘记 在 计算机 的 主 板 中 设置 从 光驱 启动， 也可以 使用 虚拟 机 软件 通过 安装 虚拟 机 的 方式 模拟 安装 过程。 计算机 从 光盘 启动 后， 首先 会 显示 如图 1- 1 所示 界面（ 注意 看 英文 提示）。 如果 想 使用 图形 界面 安装 直接 按 回车 键 即可， 或者 在 10 秒 之内 不做 任何 输入， 这样 也会 默认 进入 图形 安装 模式。 如果 想用 字符 模式 安装， 需要 输入 linux text， 然后 按 回车 键。 如果 计算机 的 内存 过小， 安装 程序 会 检测 到 因 内存 不足 而无 法 进入 图形 安装 模式， 转而 进入 字符 安装 模式。</p>
-<p>安装图解如下：<br>第一步，新建虚拟机如下图：</p>
-<p>第二步，选择相关选项，如下图：</p>
-<p>第三步选择“稍后安装操作系统”，如下图:</p>
-<p>第四步，选择客户机操作系统类型如下图：</p>
-<p>第五步，设置虚拟机硬盘大小为20G，最低不能小于5G，如下图</p>
-<p>第六步，虚拟机新建完成，如下图：</p>
-<p>第七步，修改虚拟机内存为512M，并添加ISO镜像，如下图：</p>
-<p>自此，虚拟机新建完成，接下来点击“启动此虚拟机”进行Linux系统安装，Linux系统安装图解如下：<br>第一步，进入安装界面，直接按Enter回车键即可。</p>
-<p>第二步，光盘检测，选择SKIP跳过。</p>
-<p>第三步，选择安装过程中的语言，初学者可以选择“简体中文”。</p>
-<p>第四步，选择初始化整个硬盘，清除所有数据。</p>
-<p>第五步，选择分区方式为“自定义分区“。</p>
-<p>点击“新建“-首先创建一个swap交换分区，大小为物理内存的2倍（1024M）。</p>
-<p>第六步，继续创建分区，选择“新建“，然后创建根分区/，如下图选择，大小为剩余所有空间即可。</p>
-<p>第七步，默认点击下一步，同时默认DHCP配置，时钟选择上海，去掉UTC勾，点击下一步。</p>
-<p>第八步，设置root密码，至少六位，点击下一步。</p>
-<p>第九步，系统安装包选择，这里选择“现在定制“。</p>
-<p>第十步，系统安装包选择，左侧选择“开发“—-右侧选择”开发工具“和“开发库”，语言选择“支持中文“，其他一概不选择。</p>
-<p>安装完毕会提示“reboot“，直接回车即可。</p>
-<p>.</p>
+        <p>本文主要讲述JVM中几种常见的垃圾回收算法和相关的垃圾回收器，以及常见的和GC相关的性能调优参数。</p>
+<p>GC Roots</p>
+<p>我们先来了解一下在Java中是如何判断一个对象的生死的，有些语言比如Python是采用引用计数来统计的，但是这种做法可能会遇见循环引用的问题，在Java以及C#等语言中是采用GC Roots来解决这个问题。如果一个对象和GC Roots之间没有链接，那么这个对象也可以被视作是一个可回收的对象。</p>
+<p>Java中可以被作为GC Roots中的对象有：</p>
+<p>虚拟机栈中的引用的对象。<br>方法区中的类静态属性引用的对象。<br>方法区中的常量引用的对象。<br>本地方法栈（jni）即一般说的Native的引用对象。</p>
+<p>垃圾回收算法</p>
+<p>标记清除</p>
+<p>标记-清除算法将垃圾回收分为两个阶段：标记阶段和清除阶段。在标记阶段首先通过根节点，标记所有从根节点开始的对象，未被标记的对象就是未被引用的垃圾对象。然后，在清除阶段，清除所有未被标记的对象。标记清除算法带来的一个问题是会存在大量的空间碎片，因为回收后的空间是不连续的，这样给大对象分配内存的时候可能会提前触发full gc。</p>
+<p>复制算法</p>
+<p>将现有的内存空间分为两快，每次只使用其中一块，在垃圾回收时将正在使用的内存中的存活对象复制到未被使用的内存块中，之后，清除正在使用的内存块中的所有对象，交换两个内存的角色，完成垃圾回收。</p>
+<p>现在的商业虚拟机都采用这种收集算法来回收新生代，IBM研究表明新生代中的对象98%是朝夕生死的，所以并不需要按照1:1的比例划分内存空间，而是将内存分为一块较大的Eden空间和两块较小的Survivor空间，每次使用Eden和其中的一块Survivor。当回收时，将Eden和Survivor中还存活着的对象一次性地拷贝到另外一个Survivor空间上，最后清理掉Eden和刚才用过的Survivor的空间。HotSpot虚拟机默认Eden和Survivor的大小比例是8:1(可以通过-SurvivorRattio来配置)，也就是每次新生代中可用内存空间为整个新生代容量的90%，只有10%的内存会被“浪费”。当然，98%的对象可回收只是一般场景下的数据，我们没有办法保证回收都只有不多于10%的对象存活，当Survivor空间不够用时，需要依赖其他内存（这里指老年代）进行分配担保。</p>
+<p>标记整理</p>
+<p>复制算法的高效性是建立在存活对象少、垃圾对象多的前提下的。这种情况在新生代经常发生，但是在老年代更常见的情况是大部分对象都是存活对象。如果依然使用复制算法，由于存活的对象较多，复制的成本也将很高。<br>标记-压缩算法是一种老年代的回收算法，它在标记-清除算法的基础上做了一些优化。首先也需要从根节点开始对所有可达对象做一次标记，但之后，它并不简单地清理未标记的对象，而是将所有的存活对象压缩到内存的一端。之后，清理边界外所有的空间。这种方法既避免了碎片的产生，又不需要两块相同的内存空间，因此，其性价比比较高。</p>
+<p>增量算法</p>
+<p>增量算法的基本思想是，如果一次性将所有的垃圾进行处理，需要造成系统长时间的停顿，那么就可以让垃圾收集线程和应用程序线程交替执行。每次，垃圾收集线程只收集一小片区域的内存空间，接着切换到应用程序线程。依次反复，直到垃圾收集完成。使用这种方式，由于在垃圾回收过程中，间断性地还执行了应用程序代码，所以能减少系统的停顿时间。但是，因为线程切换和上下文转换的消耗，会使得垃圾回收的总体成本上升，造成系统吞吐量的下降。</p>
+<p>垃圾回收器</p>
+<p>Serial收集器</p>
+<p>Serial收集器是最古老的收集器，它的缺点是当Serial收集器想进行垃圾回收的时候，必须暂停用户的所有进程，即stop the world。到现在为止，它依然是虚拟机运行在client模式下的默认新生代收集器，与其他收集器相比，对于限定在单个CPU的运行环境来说，Serial收集器由于没有线程交互的开销，专心做垃圾回收自然可以获得最高的单线程收集效率。</p>
+<p>Serial Old是Serial收集器的老年代版本，它同样是一个单线程收集器，使用”标记－整理“算法。这个收集器的主要意义也是被Client模式下的虚拟机使用。在Server模式下，它主要还有两大用途：一个是在JDK1.5及以前的版本中与Parallel Scanvenge收集器搭配使用，另外一个就是作为CMS收集器的后备预案，在并发收集发生Concurrent Mode Failure的时候使用。</p>
+<p>通过指定-UseSerialGC参数，使用Serial + Serial Old的串行收集器组合进行内存回收。</p>
+<p>ParNew收集器</p>
+<p>ParNew收集器是Serial收集器新生代的多线程实现，注意在进行垃圾回收的时候依然会stop the world，只是相比较Serial收集器而言它会运行多条进程进行垃圾回收。</p>
+<p>ParNew收集器在单CPU的环境中绝对不会有比Serial收集器更好的效果，甚至由于存在线程交互的开销，该收集器在通过超线程技术实现的两个CPU的环境中都不能百分之百的保证能超越Serial收集器。当然，随着可以使用的CPU的数量增加，它对于GC时系统资源的利用还是很有好处的。它默认开启的收集线程数与CPU的数量相同，在CPU非常多（譬如32个，现在CPU动辄4核加超线程，服务器超过32个逻辑CPU的情况越来越多了）的环境下，可以使用-XX:ParallelGCThreads参数来限制垃圾收集的线程数。</p>
+<p>-UseParNewGC: 打开此开关后，使用ParNew + Serial Old的收集器组合进行内存回收，这样新生代使用并行收集器，老年代使用串行收集器。</p>
+<p>Parallel Scavenge收集器</p>
+<p>Parallel是采用复制算法的多线程新生代垃圾回收器，似乎和ParNew收集器有很多的相似的地方。但是Parallel Scanvenge收集器的一个特点是它所关注的目标是吞吐量(Throughput)。所谓吞吐量就是CPU用于运行用户代码的时间与CPU总消耗时间的比值，即吞吐量=运行用户代码时间 / (运行用户代码时间 + 垃圾收集时间)。停顿时间越短就越适合需要与用户交互的程序，良好的响应速度能够提升用户的体验；而高吞吐量则可以最高效率地利用CPU时间，尽快地完成程序的运算任务，主要适合在后台运算而不需要太多交互的任务。</p>
+<p>Parallel Old收集器是Parallel Scavenge收集器的老年代版本，采用多线程和”标记－整理”算法。这个收集器是在jdk1.6中才开始提供的，在此之前，新生代的Parallel Scavenge收集器一直处于比较尴尬的状态。原因是如果新生代Parallel Scavenge收集器，那么老年代除了Serial Old(PS MarkSweep)收集器外别无选择。由于单线程的老年代Serial Old收集器在服务端应用性能上的”拖累“，即使使用了Parallel Scavenge收集器也未必能在整体应用上获得吞吐量最大化的效果，又因为老年代收集中无法充分利用服务器多CPU的处理能力，在老年代很大而且硬件比较高级的环境中，这种组合的吞吐量甚至还不一定有ParNew加CMS的组合”给力“。直到Parallel Old收集器出现后，”吞吐量优先“收集器终于有了比较名副其实的应用祝贺，在注重吞吐量及CPU资源敏感的场合，都可以优先考虑Parallel Scavenge加Parallel Old收集器。</p>
+<p>-UseParallelGC: 虚拟机运行在Server模式下的默认值，打开此开关后，使用Parallel Scavenge + Serial Old的收集器组合进行内存回收。-UseParallelOldGC: 打开此开关后，使用Parallel Scavenge + Parallel Old的收集器组合进行垃圾回收</p>
+<p>CMS收集器</p>
+<p>CMS(Concurrent Mark Swep)收集器是一个比较重要的回收器，现在应用非常广泛，我们重点来看一下，CMS一种获取最短回收停顿时间为目标的收集器，这使得它很适合用于和用户交互的业务。从名字(Mark Swep)就可以看出，CMS收集器是基于标记清除算法实现的。它的收集过程分为四个步骤：</p>
+<p>初始标记(initial mark)<br>并发标记(concurrent mark)<br>重新标记(remark)<br>并发清除(concurrent sweep)</p>
+<p>注意初始标记和重新标记还是会stop the world，但是在耗费时间更长的并发标记和并发清除两个阶段都可以和用户进程同时工作。</p>
+<p>不过由于CMS收集器是基于标记清除算法实现的，会导致有大量的空间碎片产生，在为大对象分配内存的时候，往往会出现老年代还有很大的空间剩余，但是无法找到足够大的连续空间来分配当前对象，不得不提前开启一次Full GC。为了解决这个问题，CMS收集器默认提供了一个-XX:+UseCMSCompactAtFullCollection收集开关参数（默认就是开启的)，用于在CMS收集器进行FullGC完开启内存碎片的合并整理过程，内存整理的过程是无法并发的，这样内存碎片问题倒是没有了，不过停顿时间不得不变长。虚拟机设计者还提供了另外一个参数-XX:CMSFullGCsBeforeCompaction参数用于设置执行多少次不压缩的FULL GC后跟着来一次带压缩的（默认值为0，表示每次进入Full GC时都进行碎片整理）。</p>
+<p>不幸的是，它作为老年代的收集器，却无法与jdk1.4中已经存在的新生代收集器Parallel Scavenge配合工作，所以在jdk1.5中使用cms来收集老年代的时候，新生代只能选择ParNew或Serial收集器中的一个。ParNew收集器是使用-XX:+UseConcMarkSweepGC选项启用CMS收集器之后的默认新生代收集器，也可以使用-XX:+UseParNewGC选项来强制指定它。</p>
+<p>由于CMS收集器现在比较常用，下面我们再额外了解一下CMS算法的几个常用参数：</p>
+<p>UseCMSInitatingOccupancyOnly：表示只在到达阈值的时候，才进行 CMS 回收。<br>为了减少第二次暂停的时间，通过-XX:+CMSParallelRemarkEnabled开启并行remark。如果ramark时间还是过长的话，可以开启-XX:+CMSScavengeBeforeRemark选项，强制remark之前开启一次minor gc，减少remark的暂停时间，但是在remark之后也立即开始一次minor gc。<br>CMS默认启动的回收线程数目是(ParallelGCThreads + 3)/4，如果你需要明确设定，可以通过-XX:+ParallelCMSThreads来设定，其中-XX:+ParallelGCThreads代表的年轻代的并发收集线程数目。<br>CMSClassUnloadingEnabled： 允许对类元数据进行回收。<br>CMSInitatingPermOccupancyFraction：当永久区占用率达到这一百分比后，启动 CMS 回收 (前提是-XX:+CMSClassUnloadingEnabled 激活了)。<br>CMSIncrementalMode：使用增量模式，比较适合单 CPU。<br>UseCMSCompactAtFullCollection参数可以使 CMS 在垃圾收集完成后，进行一次内存碎片整理。内存碎片的整理并不是并发进行的。<br>UseFullGCsBeforeCompaction：设定进行多少次 CMS 垃圾回收后，进行一次内存压缩。</p>
+<p>一些建议</p>
+<p>对于Native Memory:</p>
+<p>使用了NIO或者NIO框架（Mina/Netty）<br>使用了DirectByteBuffer分配字节缓冲区<br>使用了MappedByteBuffer做内存映射</p>
+<p>由于Native Memory只能通过FullGC回收，所以除非你非常清楚这时真的有必要，否则不要轻易调用System.gc()。</p>
+<p>另外为了防止某些框架中的System.gc调用（例如NIO框架、Java RMI），建议在启动参数中加上-XX:+DisableExplicitGC来禁用显式GC。这个参数有个巨大的坑，如果你禁用了System.gc()，那么上面的3种场景下的内存就无法回收，可能造成OOM，如果你使用了CMS GC，那么可以用这个参数替代：-XX:+ExplicitGCInvokesConcurrent。</p>
+<p>此外除了CMS的GC，其实其他针对old gen的回收器都会在对old gen回收的同时回收young gen。</p>
+<p>G1收集器</p>
+<p>G1收集器是一款面向服务端应用的垃圾收集器。HotSpot团队赋予它的使命是在未来替换掉JDK1.5中发布的CMS收集器。与其他GC收集器相比，G1具备如下特点：</p>
+<p>并行与并发：G1能更充分的利用CPU，多核环境下的硬件优势来缩短stop the world的停顿时间。<br>分代收集：和其他收集器一样，分代的概念在G1中依然存在，不过G1不需要其他的垃圾回收器的配合就可以独自管理整个GC堆。<br>空间整合：G1收集器有利于程序长时间运行，分配大对象时不会无法得到连续的空间而提前触发一次GC。<br>可预测的非停顿：这是G1相对于CMS的另一大优势，降低停顿时间是G1和CMS共同的关注点，能让使用者明确指定在一个长度为M毫秒的时间片段内，消耗在垃圾收集上的时间不得超过N毫秒。</p>
+<p>在使用G1收集器时，Java堆的内存布局和其他收集器有很大的差别，它将这个Java堆分为多个大小相等的独立区域，虽然还保留新生代和老年代的概念，但是新生代和老年代不再是物理隔离的了，它们都是一部分Region（不需要连续）的集合。</p>
+<p>虽然G1看起来有很多优点，实际上CMS还是主流。</p>
+<p>与GC相关的常用参数</p>
+<p>除了上面提及的一些参数，下面补充一些和GC相关的常用参数：</p>
+<p>-Xmx: 设置堆内存的最大值。<br>-Xms: 设置堆内存的初始值。<br>-Xmn: 设置新生代的大小。<br>-Xss: 设置栈的大小。<br>-PretenureSizeThreshold: 直接晋升到老年代的对象大小，设置这个参数后，大于这个参数的对象将直接在老年代分配。<br>-MaxTenuringThrehold: 晋升到老年代的对象年龄。每个对象在坚持过一次Minor GC之后，年龄就会加1，当超过这个参数值时就进入老年代。<br>-UseAdaptiveSizePolicy: 在这种模式下，新生代的大小、eden 和 survivor 的比例、晋升老年代的对象年龄等参数会被自动调整，以达到在堆大小、吞吐量和停顿时间之间的平衡点。在手工调优比较困难的场合，可以直接使用这种自适应的方式，仅指定虚拟机的最大堆、目标的吞吐量 (GCTimeRatio) 和停顿时间 (MaxGCPauseMills)，让虚拟机自己完成调优工作。<br>-SurvivorRattio: 新生代Eden区域与Survivor区域的容量比值，默认为8，代表Eden: Suvivor= 8: 1。<br>-XX:ParallelGCThreads：设置用于垃圾回收的线程数。通常情况下可以和 CPU 数量相等。但在 CPU 数量比较多的情况下，设置相对较小的数值也是合理的。<br>-XX:MaxGCPauseMills：设置最大垃圾收集停顿时间。它的值是一个大于 0 的整数。收集器在工作时，会调整 Java 堆大小或者其他一些参数，尽可能地把停顿时间控制在 MaxGCPauseMills 以内。<br>-XX:GCTimeRatio:设置吞吐量大小，它的值是一个 0-100 之间的整数。假设 GCTimeRatio 的值为 n，那么系统将花费不超过 1/(1+n) 的时间用于垃圾收集。</p>
 
       
     </div>
@@ -607,7 +592,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/Linux/" rel="tag"><i class="fa fa-tag"></i> Linux</a>
+            <a href="/tags/jvm/" rel="tag"><i class="fa fa-tag"></i> jvm</a>
           
         </div>
       
@@ -620,8 +605,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2017/08/07/为什么走上这路/" rel="next" title="whystudyIT">
-                <i class="fa fa-chevron-left"></i> whystudyIT
+              <a href="/2017/08/26/时间观念/" rel="next" title="时间观念">
+                <i class="fa fa-chevron-left"></i> 时间观念
               </a>
             
           </div>
@@ -629,10 +614,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2017/08/26/致毕业的自己/" rel="prev" title="致即将毕业的我">
-                致即将毕业的我 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -994,9 +975,9 @@
     
       <script type="text/javascript">
         var disqus_config = function () {
-          this.page.url = 'http://fuyk.github.io/2017/08/25/Linux（一）/';
-          this.page.identifier = '2017/08/25/Linux（一）/';
-          this.page.title = 'Linux（一）';
+          this.page.url = 'http://fuyk.github.io/2017/09/01/JVM垃圾回收算法及回收器/';
+          this.page.identifier = '2017/09/01/JVM垃圾回收算法及回收器/';
+          this.page.title = 'JVM垃圾回收算法及回收器';
         };
         var d = document, s = d.createElement('script');
         s.src = 'https://ErryLee.disqus.com/embed.js';
