@@ -1577,6 +1577,7 @@ pre .javascript .function {
   display: inline-block;
   margin-right: 10px;
   font-size: 13px;
+  color: #f00;
 }
 .post-nav {
   display: table;
@@ -2115,7 +2116,7 @@ img:hover {
   width: 4px;
   height: 4px;
   border-radius: 50%;
-  background: #5df10a;
+  background: #9affff;
 }
 .links-of-blogroll {
   font-size: 13px;
