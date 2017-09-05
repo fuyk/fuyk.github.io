@@ -589,6 +589,422 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://fuyk.github.io/2017/09/05/并发concurrent-2/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="符永坤（FUYK）">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="https://avatars2.githubusercontent.com/u/26453832?v=4&u=126bfb148df1cdfa6d48e7dd63660fd1580fd86e&s=400">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="新力量=新科技">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2017/09/05/并发concurrent-2/" itemprop="url">并发concurrent(2)</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-09-05T20:47:18+08:00">
+                2017-09-05
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2017/09/05/并发concurrent-2/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count"
+                        data-disqus-identifier="2017/09/05/并发concurrent-2/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计</span>
+                
+                <span title="字数统计">
+                  4,111
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长</span>
+                
+                <span title="阅读时长">
+                  16
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>并发编程 ：Concurrent  ( 中 )</p>
+<p>一般并发，多线程都会结合线程池的使用，所以本篇说说相关线程池。</p>
+<ol>
+<li>执行器服务 ExecutorService</li>
+</ol>
+<p>java.util.concurrent.ExecutorService 接口表示一个异步执行机制，使我们能够在后台执行任务。因此一个 ExecutorService 很类似于一个线程池。实际上，存在于 java.util.concurrent 包里的 ExecutorService 实现就是一个线程池实现。</p>
+<p>ExecutorService 例子</p>
+<p>以下是一个简单的 ExecutorService 例子：</p>
+<p>ExecutorService executorService = Executors.newFixedThreadPool(10);  </p>
+<p>executorService.execute(new Runnable() {<br>    public void run() {<br>        System.out.println(“Asynchronous task”);<br>    }<br>});  </p>
+<p>executorService.shutdown();</p>
+<p>首先使用 newFixedThreadPool() 工厂方法创建一个 ExecutorService。这里创建了一个十个线程执行任务的线程池。然后，将一个 Runnable 接口的匿名实现类传递给 execute() 方法。这将导致 ExecutorService 中的某个线程执行该 Runnable。</p>
+<p>任务委派</p>
+<p>下图说明了一个线程是如何将一个任务委托给一个 ExecutorService 去异步执行的：</p>
+<p><img src="/2017/09/05/并发concurrent-2/1.jpg" alt="并发"></p>
+<p>一个线程将一个任务委派给一个 ExecutorService 去异步执行。</p>
+<p>一旦该线程将任务委派给 ExecutorService，该线程将继续它自己的执行，独立于该任务的执行。</p>
+<p>ExecutorService 实现</p>
+<p>既然 ExecutorService 是个接口，如果你想用它的话就得去使用它的实现类之一。</p>
+<p>java.util.concurrent 包提供了 ExecutorService 接口的以下实现类：</p>
+<p>ThreadPoolExecutor<br>ScheduledThreadPoolExecutor</p>
+<p>创建一个 ExecutorService</p>
+<p>ExecutorService 的创建依赖于你使用的具体实现。但是你也可以使用 Executors 工厂类来创建 ExecutorService 实例。</p>
+<p>以下是几个创建 ExecutorService 实例的例子：</p>
+<p>ExecutorService executorService1 = Executors.newSingleThreadExecutor();  </p>
+<p>ExecutorService executorService2 = Executors.newFixedThreadPool(10);  </p>
+<p>ExecutorService executorService3 = Executors.newScheduledThreadPool(10);</p>
+<p>ExecutorService 使用</p>
+<p>有几种不同的方式来将任务委托给 ExecutorService 去执行：</p>
+<p>execute(Runnable)<br>submit(Runnable)<br>submit(Callable)<br>invokeAny(…)<br>invokeAll(…)</p>
+<p>接下来我们挨个看一下这些方法。</p>
+<p>execute(Runnable)</p>
+<p>execute(Runnable) 方法要求一个 java.lang.Runnable 对象，然后对它进行异步执行。以下是使用 ExecutorService 执行一个 Runnable 的示例：</p>
+<p>ExecutorService executorService = Executors.newSingleThreadExecutor();  </p>
+<p>executorService.execute(new Runnable() {<br>    public void run() {<br>        System.out.println(“Asynchronous task”);<br>    }<br>});  </p>
+<p>executorService.shutdown();</p>
+<p>没有办法得知被执行的 Runnable 的执行结果。如果有需要的话你得使用一个 Callable(以下将做介绍)。</p>
+<p>submit(Runnable)</p>
+<p>submit(Runnable) 方法也要求一个 Runnable 实现类，但它返回一个 Future 对象。这个 Future 对象可以用来检查 Runnable 是否已经执行完毕。以下是 ExecutorService submit() 示例：</p>
+<p>Future future = executorService.submit(new Runnable() {<br>    public void run() {<br>        System.out.println(“Asynchronous task”);<br>    }<br>});  </p>
+<p>future.get();  //returns null if the task has finished correctly.</p>
+<p>submit(Callable)</p>
+<p>submit(Callable) 方法类似于 submit(Runnable) 方法，除了它所要求的参数类型之外。Callable 实例除了它的 call() 方法能够返回一个结果之外和一个 Runnable 很相像。Runnable.run() 不能够返回一个结果。Callable 的结果可以通过 submit(Callable) 方法返回的 Future 对象进行获取。</p>
+<p>以下是一个 ExecutorService Callable 示例：</p>
+<p>Future future = executorService.submit(new Callable(){<br>    public Object call() throws Exception {<br>        System.out.println(“Asynchronous Callable”);<br>        return “Callable Result”;<br>    }<br>});  </p>
+<p>System.out.println(“future.get() = “ + future.get());</p>
+<p>以上代码输出：</p>
+<p>Asynchronous Callable<br>future.get() = Callable Result</p>
+<p>invokeAny()</p>
+<p>invokeAny() 方法要求一系列的 Callable 或者其子接口的实例对象。调用这个方法并不会返回一个 Future，但它返回其中一个 Callable 对象的结果。无法保证返回的是哪个 Callable 的结果 – 只能表明其中一个已执行结束。</p>
+<p>如果其中一个任务执行结束(或者抛了一个异常)，其他 Callable 将被取消。以下是示例代码：</p>
+<p>ExecutorService executorService = Executors.newSingleThreadExecutor();  </p>
+<p>Set<callable<string>&gt; callables = new HashSet<callable<string>&gt;();  </callable<string></callable<string></p>
+<p>callables.add(new Callable<string>() {<br>    public String call() throws Exception {<br>        return “Task 1”;<br>    }<br>});<br>callables.add(new Callable<string>() {<br>    public String call() throws Exception {<br>        return “Task 2”;<br>    }<br>});<br>callables.add(new Callable<string>() {<br>    public String call() throws Exception {<br>        return “Task 3”;<br>    }<br>});  </string></string></string></p>
+<p>String result = executorService.invokeAny(callables);  </p>
+<p>System.out.println(“result = “ + result);  </p>
+<p>executorService.shutdown();</p>
+<p>上述代码将会打印出给定 Callable 集合中的一个的执行结果。我自己试着执行了它几次，结果始终在变。有时是 “Task 1″，有时是 “Task 2″ 等等。</p>
+<p>invokeAll()</p>
+<p>invokeAll() 方法将调用你在集合中传给 ExecutorService 的所有 Callable 对象。invokeAll() 返回一系列的 Future 对象，通过它们你可以获取每个 Callable 的执行结果。记住，一个任务可能会由于一个异常而结束，因此它可能没有 “成功”。</p>
+<p>无法通过一个 Future 对象来告知我们是两种结束中的哪一种。以下是一个代码示例：</p>
+<p>ExecutorService executorService = Executors.newSingleThreadExecutor();  </p>
+<p>Set<callable<string>&gt; callables = new HashSet<callable<string>&gt;();  </callable<string></callable<string></p>
+<p>callables.add(new Callable<string>() {<br>    public String call() throws Exception {<br>        return “Task 1”;<br>    }<br>});<br>callables.add(new Callable<string>() {<br>    public String call() throws Exception {<br>        return “Task 2”;<br>    }<br>});<br>callables.add(new Callable<string>() {<br>    public String call() throws Exception {<br>        return “Task 3”;<br>    }<br>});  </string></string></string></p>
+<p>List<future<string>&gt; futures = executorService.invokeAll(callables);  </future<string></p>
+<p>for(Future<string> future : futures){<br>    System.out.println(“future.get = “ + future.get());<br>}  </string></p>
+<p>executorService.shutdown();</p>
+<p>ExecutorService 关闭</p>
+<p>使用完 ExecutorService 之后你应该将其关闭，以使其中的线程不再运行。</p>
+<p>比如，如果你的应用是通过一个 main() 方法启动的，之后 main 方法退出了你的应用，如果你的应用有一个活动的 ExexutorService 它将还会保持运行。ExecutorService 里的活动线程阻止了 JVM 的关闭。</p>
+<p>要终止 ExecutorService 里的线程你需要调用 ExecutorService 的 shutdown() 方法。ExecutorService 并不会立即关闭，但它将不再接受新的任务，而且一旦所有线程都完成了当前任务的时候，ExecutorService 将会关闭。在 shutdown() 被调用之前所有提交给 ExecutorService 的任务都被执行。如果你想要立即关闭 ExecutorService，你可以调用 shutdownNow() 方法。这样会立即尝试停止所有执行中的任务，并忽略掉那些已提交但尚未开始处理的任务。无法担保执行任务的正确执行。可能它们被停止了，也可能已经执行结束。</p>
+<ol>
+<li>线程池执行者 ThreadPoolExecutor</li>
+</ol>
+<p>java.util.concurrent.ThreadPoolExecutor 是 ExecutorService 接口的一个实现。ThreadPoolExecutor 使用其内部池中的线程执行给定任务(Callable 或者 Runnable)。</p>
+<p>ThreadPoolExecutor 包含的线程池能够包含不同数量的线程。池中线程的数量由以下变量决定：</p>
+<p>corePoolSize<br>maximumPoolSize</p>
+<p>当一个任务委托给线程池时，如果池中线程数量低于 corePoolSize，一个新的线程将被创建，即使池中可能尚有空闲线程。如果内部任务队列已满，而且有至少 corePoolSize 正在运行，但是运行线程的数量低于 maximumPoolSize，一个新的线程将被创建去执行该任务。</p>
+<p>ThreadPoolExecutor 图解：</p>
+<p><img src="/2017/09/05/并发concurrent-2/2.jpg" alt="并发"></p>
+<p>一个 ThreadPoolExecutor</p>
+<p>创建一个 ThreadPoolExecutor</p>
+<p>ThreadPoolExecutor 有若干个可用构造子。比如：</p>
+<p>int  corePoolSize  =    5;<br>int  maxPoolSize   =   10;<br>long keepAliveTime = 5000;  </p>
+<p>ExecutorService threadPoolExecutor =<br>        new ThreadPoolExecutor(<br>                corePoolSize,<br>                maxPoolSize,<br>                keepAliveTime,<br>                TimeUnit.MILLISECONDS,<br>                new LinkedBlockingQueue<runnable>()<br>                );</runnable></p>
+<p>但是，除非你确实需要显式为 ThreadPoolExecutor 定义所有参数，使用 java.util.concurrent.Executors 类中的工厂方法之一会更加方便，正如 ExecutorService 小节所述。</p>
+<ol>
+<li>定时执行者服务 ScheduledExecutorService</li>
+</ol>
+<p>java.util.concurrent.ScheduledExecutorService 是一个 ExecutorService， 它能够将任务延后执行，或者间隔固定时间多次执行。 任务由一个工作者线程异步执行，而不是由提交任务给 ScheduledExecutorService 的那个线程执行。</p>
+<p>ScheduledExecutorService 例子</p>
+<p>以下是一个简单的 ScheduledExecutorService 示例：</p>
+<p>ScheduledExecutorService scheduledExecutorService =<br>        Executors.newScheduledThreadPool(5);  </p>
+<p>ScheduledFuture scheduledFuture =<br>    scheduledExecutorService.schedule(new Callable() {<br>        public Object call() throws Exception {<br>            System.out.println(“Executed!”);<br>            return “Called!”;<br>        }<br>    },<br>    5,<br>    TimeUnit.SECONDS);</p>
+<p>首先一个内置 5 个线程的 ScheduledExecutorService 被创建。之后一个 Callable 接口的匿名类示例被创建然后传递给 schedule() 方法。后边的俩参数定义了 Callable 将在 5 秒钟之后被执行。</p>
+<p>ScheduledExecutorService 实现</p>
+<p>既然 ScheduledExecutorService 是一个接口，你要用它的话就得使用 java.util.concurrent 包里对它的某个实现类。ScheduledExecutorService 具有以下实现类：ScheduledThreadPoolExecutor</p>
+<p>创建一个 ScheduledExecutorService<br>如何创建一个 ScheduledExecutorService 取决于你采用的它的实现类。但是你也可以使用 Executors 工厂类来创建一个 ScheduledExecutorService 实例。比如：</p>
+<p>ScheduledExecutorService scheduledExecutorService =  </p>
+<pre><code>Executors.newScheduledThreadPool(5);
+</code></pre><p>ScheduledExecutorService 使用</p>
+<p>一旦你创建了一个 ScheduledExecutorService，你可以通过调用它的以下方法：</p>
+<p>schedule (Callable task, long delay, TimeUnit timeunit)<br>schedule (Runnable task, long delay, TimeUnit timeunit)<br>scheduleAtFixedRate (Runnable, long initialDelay, long period, TimeUnit timeunit)<br>scheduleWithFixedDelay (Runnable, long initialDelay, long period, TimeUnit timeunit)</p>
+<p>下面我们就简单看一下这些方法。</p>
+<p>schedule (Callable task, long delay, TimeUnit timeunit)</p>
+<p>这个方法计划指定的 Callable 在给定的延迟之后执行。这个方法返回一个 ScheduledFuture，通过它你可以在它被执行之前对它进行取消，或者在它执行之后获取结果。以下是一个示例：</p>
+<p>ScheduledExecutorService scheduledExecutorService =<br>        Executors.newScheduledThreadPool(5);  </p>
+<p>ScheduledFuture scheduledFuture =<br>    scheduledExecutorService.schedule(new Callable() {<br>        public Object call() throws Exception {<br>            System.out.println(“Executed!”);<br>            return “Called!”;<br>        }<br>    },<br>    5,<br>    TimeUnit.SECONDS);  </p>
+<p>System.out.println(“result = “ + scheduledFuture.get());  </p>
+<p>scheduledExecutorService.shutdown();</p>
+<p>示例输出结果：</p>
+<p>Executed!<br>result = Called!</p>
+<p>schedule (Runnable task, long delay, TimeUnit timeunit)</p>
+<p>除了 Runnable 无法返回一个结果之外，这一方法工作起来就像以一个 Callable 作为一个参数的那个版本的方法一样，因此 ScheduledFuture.get() 在任务执行结束之后返回 null。</p>
+<p>scheduleAtFixedRate (Runnable, long initialDelay, long period, TimeUnit timeunit)</p>
+<p>这一方法规划一个任务将被定期执行。该任务将会在首个 initialDelay 之后得到执行，然后每个 period 时间之后重复执行。如果给定任务的执行抛出了异常，该任务将不再执行。如果没有任何异常的话，这个任务将会持续循环执行到 ScheduledExecutorService 被关闭。如果一个任务占用了比计划的时间间隔更长的时候，下一次执行将在当前执行结束执行才开始。计划任务在同一时间不会有多个线程同时执行。</p>
+<p>scheduleWithFixedDelay (Runnable, long initialDelay, long period, TimeUnit timeunit)</p>
+<p>除了 period 有不同的解释之外这个方法和 scheduleAtFixedRate() 非常像。</p>
+<p>scheduleAtFixedRate() 方法中，period 被解释为前一个执行的开始和下一个执行的开始之间的间隔时间。而在本方法中，period 则被解释为前一个执行的结束和下一个执行的结束之间的间隔。因此这个延迟是执行结束之间的间隔，而不是执行开始之间的间隔。</p>
+<p>ScheduledExecutorService 关闭</p>
+<p>正如 ExecutorService，在你使用结束之后你需要把 ScheduledExecutorService 关闭掉。否则他将导致 JVM 继续运行，即使所有其他线程已经全被关闭。</p>
+<p>你可以使用从 ExecutorService 接口继承来的 shutdown() 或 shutdownNow() 方法将 ScheduledExecutorService 关闭。参见 ExecutorService 关闭部分以获取更多信息。</p>
+<ol>
+<li>使用 ForkJoinPool 进行分叉和合并</li>
+</ol>
+<p>ForkJoinPool 在 Java 7 中被引入。它和 ExecutorService 很相似，除了一点不同。ForkJoinPool 让我们可以很方便地把任务分裂成几个更小的任务，这些分裂出来的任务也将会提交给 ForkJoinPool。任务可以继续分割成更小的子任务，只要它还能分割。可能听起来有些抽象，因此本节中我们将会解释 ForkJoinPool 是如何工作的，还有任务分割是如何进行的。</p>
+<p>分叉和合并解释</p>
+<p>在我们开始看 ForkJoinPool 之前我们先来简要解释一下分叉和合并的原理。<br>分叉和合并原理包含两个递归进行的步骤。两个步骤分别是分叉步骤和合并步骤。</p>
+<p>分叉</p>
+<p>一个使用了分叉和合并原理的任务可以将自己分叉(分割)为更小的子任务，这些子任务可以被并发执行。如下图所示：</p>
+<p><img src="/2017/09/05/并发concurrent-2/3.jpg" alt="并发"></p>
+<p>通过把自己分割成多个子任务，每个子任务可以由不同的 CPU 并行执行，或者被同一个 CPU 上的不同线程执行。只有当给的任务过大，把它分割成几个子任务才有意义。把任务分割成子任务有一定开销，因此对于小型任务，这个分割的消耗可能比每个子任务并发执行的消耗还要大。</p>
+<p>什么时候把一个任务分割成子任务是有意义的，这个界限也称作一个阀值。这要看每个任务对有意义阀值的决定。很大程度上取决于它要做的工作的种类。</p>
+<p>合并</p>
+<p>当一个任务将自己分割成若干子任务之后，该任务将进入等待所有子任务的结束之中。一旦子任务执行结束，该任务可以把所有结果合并到同一个结果。图示如下：</p>
+<p><img src="/2017/09/05/并发concurrent-2/4.jpg" alt="并发"></p>
+<p>当然，并非所有类型的任务都会返回一个结果。如果这个任务并不返回一个结果，它只需等待所有子任务执行完毕。也就不需要结果的合并啦。</p>
+<p>ForkJoinPool</p>
+<p>ForkJoinPool 是一个特殊的线程池，它的设计是为了更好的配合 分叉-和-合并 任务分割的工作。ForkJoinPool 也在 java.util.concurrent 包中，其完整类名为 java.util.concurrent.ForkJoinPool。</p>
+<p>创建一个 ForkJoinPool</p>
+<p>你可以通过其构造子创建一个 ForkJoinPool。作为传递给 ForkJoinPool 构造子的一个参数，你可以定义你期望的并行级别。并行级别表示你想要传递给 ForkJoinPool 的任务所需的线程或 CPU 数量。以下是一个 ForkJoinPool 示例：</p>
+<p>ForkJoinPool forkJoinPool = new ForkJoinPool(4);</p>
+<p>这个示例创建了一个并行级别为 4 的 ForkJoinPool。</p>
+<p>提交任务到 ForkJoinPool</p>
+<p>就像提交任务到 ExecutorService 那样，把任务提交到 ForkJoinPool。你可以提交两种类型的任务。一种是没有任何返回值的(一个 “行动”)，另一种是有返回值的(一个”任务”)。这两种类型分别由 RecursiveAction 和 RecursiveTask 表示。接下来介绍如何使用这两种类型的任务，以及如何对它们进行提交。</p>
+<p>RecursiveAction</p>
+<p>RecursiveAction 是一种没有任何返回值的任务。它只是做一些工作，比如写数据到磁盘，然后就退出了。一个 RecursiveAction 可以把自己的工作分割成更小的几块，这样它们可以由独立的线程或者 CPU 执行。你可以通过继承来实现一个 RecursiveAction。示例如下：</p>
+<p>import java.util.ArrayList;<br>import java.util.List;<br>import java.util.concurrent.RecursiveAction;  </p>
+<p>public class MyRecursiveAction extends RecursiveAction {  </p>
+<pre><code>private long workLoad = 0;  
+
+public MyRecursiveAction(long workLoad) {  
+    this.workLoad = workLoad;  
+}  
+
+@Override 
+protected void compute() {  
+
+    //if work is above threshold, break tasks up into smaller tasks  
+    if(this.workLoad &gt; 16) {  
+        System.out.println(&quot;Splitting workLoad : &quot; + this.workLoad);  
+
+        List&lt;MyRecursiveAction&gt; subtasks =  
+            new ArrayList&lt;MyRecursiveAction&gt;();  
+
+        subtasks.addAll(createSubtasks());  
+
+        for(RecursiveAction subtask : subtasks){  
+            subtask.fork();  
+        }  
+
+    } else {  
+        System.out.println(&quot;Doing workLoad myself: &quot; + this.workLoad);  
+    }  
+}  
+
+private List&lt;MyRecursiveAction&gt; createSubtasks() {  
+    List&lt;MyRecursiveAction&gt; subtasks =  
+        new ArrayList&lt;MyRecursiveAction&gt;();  
+
+    MyRecursiveAction subtask1 = new MyRecursiveAction(this.workLoad / 2);  
+    MyRecursiveAction subtask2 = new MyRecursiveAction(this.workLoad / 2);  
+
+    subtasks.add(subtask1);  
+    subtasks.add(subtask2);  
+
+    return subtasks;  
+}  
+</code></pre><p>}</p>
+<p>例子很简单。MyRecursiveAction 将一个虚构的 workLoad 作为参数传给自己的构造子。如果 workLoad 高于一个特定阀值，该工作将被分割为几个子工作，子工作继续分割。如果 workLoad 低于特定阀值，该工作将由 MyRecursiveAction 自己执行。你可以这样规划一个 MyRecursiveAction 的执行：</p>
+<p>MyRecursiveAction myRecursiveAction = new MyRecursiveAction(24);  </p>
+<p>forkJoinPool.invoke(myRecursiveAction);</p>
+<p>RecursiveTask</p>
+<p>RecursiveTask 是一种会返回结果的任务。它可以将自己的工作分割为若干更小任务，并将这些子任务的执行结果合并到一个集体结果。可以有几个水平的分割和合并。以下是一个 RecursiveTask 示例：</p>
+<p>import java.util.ArrayList;<br>import java.util.List;<br>import java.util.concurrent.RecursiveTask;  </p>
+<p>public class MyRecursiveTask extends RecursiveTask<long> {  </long></p>
+<pre><code>private long workLoad = 0;  
+
+public MyRecursiveTask(long workLoad) {  
+    this.workLoad = workLoad;  
+}  
+
+protected Long compute() {  
+
+    //if work is above threshold, break tasks up into smaller tasks  
+    if(this.workLoad &gt; 16) {  
+        System.out.println(&quot;Splitting workLoad : &quot; + this.workLoad);  
+
+        List&lt;MyRecursiveTask&gt; subtasks =  
+            new ArrayList&lt;MyRecursiveTask&gt;();  
+        subtasks.addAll(createSubtasks());  
+
+        for(MyRecursiveTask subtask : subtasks){  
+            subtask.fork();  
+        }  
+
+        long result = 0;  
+        for(MyRecursiveTask subtask : subtasks) {  
+            result += subtask.join();  
+        }  
+        return result;  
+
+    } else {  
+        System.out.println(&quot;Doing workLoad myself: &quot; + this.workLoad);  
+        return workLoad * 3;  
+    }  
+}  
+
+private List&lt;MyRecursiveTask&gt; createSubtasks() {  
+    List&lt;MyRecursiveTask&gt; subtasks =  
+    new ArrayList&lt;MyRecursiveTask&gt;();  
+
+    MyRecursiveTask subtask1 = new MyRecursiveTask(this.workLoad / 2);  
+    MyRecursiveTask subtask2 = new MyRecursiveTask(this.workLoad / 2);  
+
+    subtasks.add(subtask1);  
+    subtasks.add(subtask2);  
+
+    return subtasks;  
+}  
+</code></pre><p>}</p>
+<p>除了有一个结果返回之外，这个示例和 RecursiveAction 的例子很像。MyRecursiveTask 类继承自 RecursiveTask<long>，这也就意味着它将返回一个 Long 类型的结果。</long></p>
+<p>MyRecursiveTask 示例也会将工作分割为子任务，并通过 fork() 方法对这些子任务计划执行。</p>
+<p>此外，本示例还通过调用每个子任务的 join() 方法收集它们返回的结果。子任务的结果随后被合并到一个更大的结果，并最终将其返回。对于不同级别的递归，这种子任务的结果合并可能会发生递归。</p>
+<p>你可以这样规划一个 RecursiveTask：</p>
+<p>MyRecursiveTask myRecursiveTask = new MyRecursiveTask(128);  </p>
+<p>long mergedResult = forkJoinPool.invoke(myRecursiveTask);  </p>
+<p>System.out.println(“mergedResult = “ + mergedResult);</p>
+<p>注意是如何通过 ForkJoinPool.invoke() 方法的调用来获取最终执行结果的。</p>
+<p>ForkJoinPool 评论</p>
+<p>貌似并非每个人都对 Java 7 里的 ForkJoinPool 满意：《一个 Java 分叉-合并 带来的灾祸》。</p>
+<p><a href="http://coopsoft.com/ar/CalamityArticle.html" target="_blank" rel="external">http://coopsoft.com/ar/CalamityArticle.html</a></p>
+<p>在你计划在自己的项目里使用 ForkJoinPool 之前最好读一下该篇文章。</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+	<div>
+	
+	</div>
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://fuyk.github.io/2017/09/01/NIO/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -2635,613 +3051,6 @@ public void run() {
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://fuyk.github.io/2016/08/25/代理模式/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="符永坤（FUYK）">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="https://avatars2.githubusercontent.com/u/26453832?v=4&u=126bfb148df1cdfa6d48e7dd63660fd1580fd86e&s=400">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="新力量=新科技">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2016/08/25/代理模式/" itemprop="url">代理模式</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-08-25T23:00:24+08:00">
-                2016-08-25
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/设计模式/" itemprop="url" rel="index">
-                    <span itemprop="name">设计模式</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2016/08/25/代理模式/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count disqus-comment-count"
-                        data-disqus-identifier="2016/08/25/代理模式/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-            <div class="post-wordcount">
-              
-                
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-file-word-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">字数统计</span>
-                
-                <span title="字数统计">
-                  2,731
-                </span>
-              
-
-              
-                <span class="post-meta-divider">|</span>
-              
-
-              
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-clock-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">阅读时长</span>
-                
-                <span title="阅读时长">
-                  11
-                </span>
-              
-            </div>
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>说说 JAVA 代理模式</p>
-<p> 本文内容借阅来自ImportNew中</p>
-<p>事例</p>
-<p>小张是一个普普通通的码农，每天勤勤恳恳地码代码。某天中午小张刚要去吃饭，一个电话打到了他的手机上。“是XX公司的小张吗？我是YY公司的王AA”。“哦，是王总啊，有什么事情吗？”。沟通过后，小张弄明白了,原来客户有个需求，刚好负责这方面开发的是小张，客户就直接找到了他。不过小张却没有答应客户的请求，而是让客户找产品经理小李沟通。</p>
-<p>是小张着急去吃面而甩锅吗？并不是，只是为了使故事可以套到代理模式上。我们先看一下代理模式的定义： * 为其他对象提供一种代理，以控制对这个对象的访问。(Provide a surrogate or placeholder for another object to control access to it)</p>
-<p>对照定义，码农小张可以映射为其他对象，产品经理小李为小张的代理。我们通过JAVA代码，表述上面事例。</p>
-<p>静态代理</p>
-<p>1.抽象角色</p>
-<p>基于面向对象的思想，首先定义一个码农接口,它有一个实现用户需求的方法。</p>
-<p>public interface ICoder {</p>
-<pre><code>public void implDemands(String demandName);
-</code></pre><p>}</p>
-<p>2.真实角色</p>
-<p>我们假设小张是JAVA程序员，定义一个JAVA码农类，他通过JAA语言实现需求。</p>
-<p>public class JavaCoder implements ICoder{</p>
-<pre><code>private String name;
-
-
-
-public JavaCoder(String name){
-
-    this.name = name;
-
-}
-
-
-
-@Override
-
-public void implDemands(String demandName) {
-
-    System.out.println(name + &quot; implemented demand:&quot; + demandName + &quot; in JAVA!&quot;);
-
-}
-</code></pre><p>}</p>
-<p>3.代理角色</p>
-<p>委屈一下产品经理，将其命名为码农代理类，同时让他实现ICoder接口。</p>
-<p>public class CoderProxy implements ICoder{</p>
-<pre><code>private ICoder coder;
-
-
-
-public CoderProxy(ICoder coder){
-
-    this.coder = coder;
-
-}
-
-
-
-@Override
-
-public void implDemands(String demandName) {
-
-    coder.implDemands(demandName);
-
-}
-</code></pre><p>}</p>
-<p>上面一个接口，两个类，就实现了代理模式。Are you kidding me？这么简单？是的，就是这么简单。 我们通过一个场景类，模拟用户找产品经理增加需求。</p>
-<p>public class Customer {</p>
-<pre><code>public static void main(String args[]){
-
-    //定义一个java码农
-
-    ICoder coder = new JavaCoder(&quot;Zhang&quot;);
-
-    //定义一个产品经理
-
-    ICoder proxy = new CoderProxy(coder);
-
-    //让产品经理实现一个需求
-
-    proxy.implDemands();
-
-}
-</code></pre><p>}</p>
-<p>运行程序，结果如下：</p>
-<p>Zhang implemented demand:Add user manageMent in JAVA!</p>
-<p>产品经理充当了程序员的代理，客户把需求告诉产品经理，并不需要和程序员接触。看到这里，有些机智的程序员发现了问题。你看，产品经理就把客户的需求转达了一下，怪不得我看产品经理这么不爽。</p>
-<p>产品经理当然不只是转达用户需求，他还有很多事情可以做。比如，该项目决定不接受新增功能的需求了，对修CoderProxy类做一些修改：</p>
-<p>public class CoderProxy implements ICoder{</p>
-<pre><code>private ICoder coder;
-
-
-
-public CoderProxy(ICoder coder){
-
-    this.coder = coder;
-
-}
-
-
-
-@Override
-
-public void implDemands(String demandName) {
-
-    if(demandName.startsWith(&quot;Add&quot;)){
-
-        System.out.println(&quot;No longer receive &apos;Add&apos; demand&quot;);
-
-        return;
-
-    }
-
-    coder.implDemands(demandName);
-
-}
-</code></pre><p>}</p>
-<p>这样，当客户再有增加功能的需求时，产品经理就直接回绝了，程序员无需再对这部分需求做过滤。</p>
-<p>总结</p>
-<p>我们对上面的事例做一个简单的抽象：</p>
-<p>代理模式包含如下角色：</p>
-<p>Subject:抽象主题角色。可以是接口，也可以是抽象类。</p>
-<p>RealSubject:真实主题角色。业务逻辑的具体执行者。</p>
-<p>ProxySubject:代理主题角色。内部含有RealSubject的引用,负责对真实角色的调用，并在真实主题角色处理前后做预处理和善后工作。</p>
-<p>代理模式优点：</p>
-<p>职责清晰 真实角色只需关注业务逻辑的实现，非业务逻辑部分，后期通过代理类完成即可。</p>
-<p>高扩展性 不管真实角色如何变化，由于接口是固定的，代理类无需做任何改动。</p>
-<p>动态代理</p>
-<p>前面讲的主要是静态代理。那么什么是动态代理呢？</p>
-<p>假设有这么一个需求，在方法执行前和执行完成后，打印系统时间。这很简单嘛，非业务逻辑，只要在代理类调用真实角色的方法前、后输出时间就可以了。像上例，只有一个implDemands方法，这样实现没有问题。但如果真实角色有10个方法，那么我们要写10遍完全相同的代码。有点追求的码农，肯定会对这种方法感到非常不爽。有些机智的小伙伴可能想到了用AOP解决这个问题。非常正确。莫非AOP和动态代理有什么关系？没错！AOP用的恰恰是动态代理。</p>
-<p>代理类在程序运行时创建的代理方式被称为动态代理。也就是说，代理类并不需要在Java代码中定义，而是在运行时动态生成的。相比于静态代理， 动态代理的优势在于可以很方便的对代理类的函数进行统一的处理，而不用修改每个代理类的函数。对于上例打印时间的需求，通过使用动态代理，我们可以做一个“统一指示”，对所有代理类的方法进行统一处理，而不用逐一修改每个方法。下面我们来具体介绍下如何使用动态代理方式实现我们的需求。</p>
-<p>与静态代理相比，抽象角色、真实角色都没有变化。变化的只有代理类。因此，抽象角色、真实角色，参考ICoder和JavaCodr。</p>
-<p>在使用动态代理时，我们需要定义一个位于代理类与委托类之间的中介类，也叫动态代理类，这个类被要求实现InvocationHandler接口：</p>
-<p>public class CoderDynamicProxy implements InvocationHandler{</p>
-<pre><code> //被代理的实例
-
-private ICoder coder;
-
-
-
-public CoderDynamicProxy(ICoder _coder){
-
-    this.coder = _coder;
-
-}
-
-
-
-//调用被代理的方法
-
-@Override
-
-public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
-
-    System.out.println(System.currentTimeMillis());
-
-    Object result = method.invoke(coder, args);
-
-    System.out.println(System.currentTimeMillis());
-
-    return result;
-
-}
-</code></pre><p>}</p>
-<p>当我们调用代理类对象的方法时，这个“调用”会转送到中介类的invoke方法中，参数method标识了我们具体调用的是代理类的哪个方法，args为这个方法的参数。</p>
-<p>我们通过一个场景类，模拟用户找产品经理更改需求。</p>
-<p>public class DynamicClient {</p>
-<pre><code>public static void main(String args[]){
-
-       //要代理的真实对象
-
-       ICoder coder = new JavaCoder(&quot;Zhang&quot;);
-
-       //创建中介类实例
-
-       InvocationHandler  handler = new CoderDynamicProxy(coder);
-
-       //获取类加载器
-
-       ClassLoader cl = coder.getClass().getClassLoader();
-
-       //动态产生一个代理类
-
-       ICoder proxy = (ICoder) Proxy.newProxyInstance(cl, coder.getClass().getInterfaces(), handler);
-
-       //通过代理类，执行doSomething方法；
-
-       proxy.implDemands(&quot;Modify user management&quot;);
-
-   }
-</code></pre><p>}</p>
-<p>执行结果如下：</p>
-<p>1501728574978</p>
-<p>Zhang implemented demand:Modify user management in JAVA!</p>
-<p>1501728574979</p>
-<p>通过上述代码，就实现了，在执行委托类的所有方法前、后打印时间。还是那个熟悉的小张，但我们并没有创建代理类，也没有时间ICoder接口。这就是动态代理。</p>
-<p>总结</p>
-<p>总结一下，一个典型的动态代理可分为以下四个步骤：</p>
-<p>创建抽象角色</p>
-<p>创建真实角色</p>
-<p>通过实现InvocationHandler接口创建中介类</p>
-<p>通过场景类，动态生成代理类</p>
-<p>如果只是想用动态代理，看到这里就够了。但如果想知道为什么通过proxy对象，就能够执行中介类的invoke方法，以及生成的proxy对象是什么样的，可以继续往下看。</p>
-<p>源码分析(JDK7)</p>
-<p>看到这里的小伙伴，都是有追求的程序员。上面的场景类中，通过</p>
-<p>//动态产生一个代理类</p>
-<p>ICoder proxy = (ICoder) Proxy.newProxyInstance(cl, coder.getClass().getInterfaces(), handler);</p>
-<p>动态产生了一个代理类。那么这个代理类是如何产生的呢？我们通过代码一窥究竟。</p>
-<p>Proxy类的newProxyInstance方法，主要业务逻辑如下：</p>
-<p>//生成代理类class，并加载到jvm中</p>
-<p>Class&lt;?&gt; cl = getProxyClass0(loader, interfaces);</p>
-<p>//获取代理类参数为InvocationHandler的构造函数</p>
-<p>final Constructor&lt;?&gt; cons = cl.getConstructor(constructorParams);</p>
-<p>//生成代理类，并返回</p>
-<p>return newInstance(cons, ih);</p>
-<p>上面代码做了三件事：</p>
-<p>根据传入的参数interfaces动态生成一个类，它实现interfaces中的接口，该例中即ICoder接口的implDemands方法。假设动态生成的类为$Proxy0。</p>
-<p>通过传入的classloder,将刚生成的$Proxy0类加载到jvm中。</p>
-<p>利用中介类，调用$Proxy0的$Proxy0(InvocationHandler)构造函数，创建$Proxy0类的实例，其InvocationHandler属性，为我们创建的中介类。</p>
-<p>上面的核心，就在于getProxyClass0方法：</p>
-<p>private static Class&lt;?&gt; getProxyClass0(ClassLoader loader,</p>
-<pre><code>                                       Class&lt;?&gt;... interfaces) {
-
-    if (interfaces.length &gt; 65535) {
-
-        throw new IllegalArgumentException(&quot;interface limit exceeded&quot;);
-
-    }
-
-
-
-    // If the proxy class defined by the given loader implementing
-
-    // the given interfaces exists, this will simply return the cached copy;
-
-    // otherwise, it will create the proxy class via the ProxyClassFactory
-
-    return proxyClassCache.get(loader, interfaces);
-
-}
-</code></pre><p>在Proxy类中有个属性proxyClassCache，这是一个WeakCache类型的静态变量。它指示了类加载器和代理类之间的映射。所以proxyClassCache的get方法用于根据类加载器来获取Proxy类，如果已经存在则直接从cache中返回，如果没有则创建一个映射并更新cache表。</p>
-<p>我们跟一下代理类的创建流程：</p>
-<p>调用Factory类的get方法，而它又调用了ProxyClassFactory类的apply方法，最终找到下面一行代码：</p>
-<p>//Generate the specified proxy class.</p>
-<p>byte[] proxyClassFile = ProxyGenerator.generateProxyClass(proxyName, interfaces);</p>
-<p>就是它，生成了代理类。</p>
-<p>查看动态生成的代理类</p>
-<p>通过上面的分析，我们已经知道Proxy类动态创建代理类的流程。那创建出来的代理类到底是什么样子的呢？我们可以通过下面的代码，手动生成：</p>
-<p>public class CodeUtil {</p>
-<pre><code>public static void main(String[] args) throws IOException {
-
-     byte[] classFile = ProxyGenerator.generateProxyClass(&quot;TestProxyGen&quot;, JavaCoder.class.getInterfaces());
-
-     File file = new File(&quot;D:/aaa/TestProxyGen.class&quot;);
-
-     FileOutputStream fos = new FileOutputStream(file);
-
-     fos.write(classFile);
-
-     fos.flush();
-
-     fos.close();
-
-   }
-</code></pre><p> }</p>
-<p>通过反编译工具查看生成的class文件:</p>
-<p>import java.lang.reflect.InvocationHandler;</p>
-<p>import java.lang.reflect.Method;</p>
-<p>import java.lang.reflect.Proxy;</p>
-<p>import java.lang.reflect.UndeclaredThrowableException;</p>
-<p>import model.proxy.ICoder;</p>
-<p>public final class TestProxyGen extends Proxy</p>
-<p>  implements ICoder</p>
-<p>{</p>
-<p>  private static Method m1;</p>
-<p>  private static Method m0;</p>
-<p>  private static Method m3;</p>
-<p>  private static Method m2;</p>
-<p>  public TestProxyGen(InvocationHandler paramInvocationHandler)</p>
-<pre><code>throws
-</code></pre><p>  {</p>
-<pre><code>super(paramInvocationHandler);
-</code></pre><p>  }</p>
-<p>  public final boolean equals(Object paramObject)</p>
-<pre><code>throws
-</code></pre><p>  {</p>
-<pre><code>try
-
-{
-
-  return ((Boolean)this.h.invoke(this, m1, new Object[] { paramObject })).booleanValue();
-
-}
-
-catch (RuntimeException localRuntimeException)
-
-{
-
-  throw localRuntimeException;
-
-}
-
-catch (Throwable localThrowable)
-
-{
-
-}
-
-throw new UndeclaredThrowableException(localThrowable);
-</code></pre><p>  }</p>
-<p>  public final int hashCode()</p>
-<pre><code>throws
-</code></pre><p>  {</p>
-<pre><code>try
-
-{
-
-  return ((Integer)this.h.invoke(this, m0, null)).intValue();
-
-}
-
-catch (RuntimeException localRuntimeException)
-
-{
-
-  throw localRuntimeException;
-
-}
-
-catch (Throwable localThrowable)
-
-{
-
-}
-
-throw new UndeclaredThrowableException(localThrowable);
-</code></pre><p>  }</p>
-<p>  public final void implDemands(String paramString)</p>
-<pre><code>throws
-</code></pre><p>  {</p>
-<pre><code>try
-
-{
-
-  this.h.invoke(this, m3, new Object[] { paramString });
-
-  return;
-
-}
-
-catch (RuntimeException localRuntimeException)
-
-{
-
-  throw localRuntimeException;
-
-}
-
-catch (Throwable localThrowable)
-
-{
-
-}
-
-throw new UndeclaredThrowableException(localThrowable);
-</code></pre><p>  }</p>
-<p>  public final String toString()</p>
-<pre><code>throws
-</code></pre><p>  {</p>
-<pre><code>try
-
-{
-
-  return (String)this.h.invoke(this, m2, null);
-
-}
-
-catch (RuntimeException localRuntimeException)
-
-{
-
-  throw localRuntimeException;
-
-}
-
-catch (Throwable localThrowable)
-
-{
-
-}
-
-throw new UndeclaredThrowableException(localThrowable);
-</code></pre><p>  }</p>
-<p>  static</p>
-<p>  {</p>
-<pre><code>try
-
-{
-
-  m1 = Class.forName(&quot;java.lang.Object&quot;).getMethod(&quot;equals&quot;, new Class[] { Class.forName(&quot;java.lang.Object&quot;) });
-
-  m0 = Class.forName(&quot;java.lang.Object&quot;).getMethod(&quot;hashCode&quot;, new Class[0]);
-
-  m3 = Class.forName(&quot;model.proxy.ICoder&quot;).getMethod(&quot;implDemands&quot;, new Class[] { Class.forName(&quot;java.lang.String&quot;) });
-
-  m2 = Class.forName(&quot;java.lang.Object&quot;).getMethod(&quot;toString&quot;, new Class[0]);
-
-  return;
-
-}
-
-catch (NoSuchMethodException localNoSuchMethodException)
-
-{
-
-  throw new NoSuchMethodError(localNoSuchMethodException.getMessage());
-
-}
-
-catch (ClassNotFoundException localClassNotFoundException)
-
-{
-
-}
-
-throw new NoClassDefFoundError(localClassNotFoundException.getMessage());
-</code></pre><p>  }</p>
-<p>}</p>
-<p>这样，我们就理解，为什么调用代理类的implDemands方法，回去执行中介类的invoke方法了。</p>
-<p>看完本文有收获？请转发分享给更多人</p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-	<div>
-	
-	</div>
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -3292,7 +3101,7 @@ throw new NoClassDefFoundError(localClassNotFoundException.getMessage());
           
             <div class="site-state-item site-state-posts">
               <a href="/archives/">
-                <span class="site-state-item-count">13</span>
+                <span class="site-state-item-count">14</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -3440,7 +3249,7 @@ throw new NoClassDefFoundError(localClassNotFoundException.getMessage());
 
 <div class="theme-info">
   <div class="powered-by"></div>
-  <span class="post-count">博客全站共30.3k字</span>
+  <span class="post-count">博客全站共34.4k字</span>
 </div>
 
         
