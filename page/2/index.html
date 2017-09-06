@@ -354,6 +354,808 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://fuyk.github.io/2017/08/05/hexoStudy/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="符永坤（FUYK）">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="https://avatars2.githubusercontent.com/u/26453832?v=4&u=126bfb148df1cdfa6d48e7dd63660fd1580fd86e&s=400">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="新力量=新科技">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2017/08/05/hexoStudy/" itemprop="url">hexoStudy</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-08-05T22:57:03+08:00">
+                2017-08-05
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/hexo建博小结/" itemprop="url" rel="index">
+                    <span itemprop="name">hexo建博小结</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2017/08/05/hexoStudy/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count"
+                        data-disqus-identifier="2017/08/05/hexoStudy/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计</span>
+                
+                <span title="字数统计">
+                  1,107
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长</span>
+                
+                <span title="阅读时长">
+                  4
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>前提准备</p>
+<p>NodeJS<br>git<br>确保安装这两个才可以继续。</p>
+<p>安装Hexo<br>打开git</p>
+<p>$ npm install -g hexo<br>部署Hexo<br>在任何想要放置Hexo的文件夹下建立名为Hexo的文件夹，在此文件夹中右键打开Git Bash</p>
+<p>$ hexo init<br>Hexo会自动建立所有博客需要的文件</p>
+<p>$ hexo g<br>$ hexo s<br>输入上面的命令就可以在本地看到初始化的博客啦，浏览器中输入localhost:4000<br>以上就完成了博客的本地调试了，下面需要将本地的博客放到github中去，利用github pages 的免费空间存放你的博客，而且别人也可以访问你的博客。</p>
+<p>配置和使用github<br>首先需要注册github（废话。。划掉），然后登录github，点击右上角你的头像，再点击Settings，进入设置页面。<br>点击侧栏的SSH and GPG keys,可以查看你是否有本机的SSH密匙。如果没有，说明并没有设置SSH密匙。</p>
+<p>检查SSH keys的设置<br>先不管github的网页，回到本机，打开Git Bash。输入：</p>
+<p>$ cd ~/. ssh 检查本机的ssh密钥<br>如果提示：No such file or directory 说明你是第一次使用git。</p>
+<p>生成新的SSH Key：<br>继续输入：</p>
+<p>$ ssh-keygen -t rsa -C “邮件地址@youremail.com”<br>Generating public/private rsa key pair.<br>Enter file in which to save the key (/Users/your_user_directory/.ssh/id_rsa):&lt;回车就好&gt;<br>系统会要求你输入密码，输入就好，只是这里的输入是不显示占位符的。</p>
+<p>Enter passphrase (empty for no passphrase):&lt;输入加密串&gt;<br>Enter same passphrase again:&lt;再次输入加密串&gt;<br>完成后就会提示你的密匙文件所在的位置，打开id_rsa.pub文件，复制所有，回到github网页，点击New SSH key,粘贴到key文本框中，点击add key就可以了。</p>
+<p>测试SSH连接<br>输入下面的命令，git@github.com不用修改。</p>
+<p>$ ssh -T git@github.com<br>会有这样的反馈：</p>
+<p>The authenticity of host ‘github.com (207.97.227.239)’ can’t be established.<br>RSA key fingerprint is 16:27:ac:a5:76:28:2d:36:63:1b:56:4d:eb:df:a6:48.<br>Are you sure you want to continue connecting (yes/no)?<br>输入yes，就会看到：</p>
+<p>Hi Dulmcat! You’ve successfully authenticated, but GitHub does not provide shell access.<br>到这里就代表已经正确的连接到github了。</p>
+<p>设置用户信息<br>但还有一些个人信息还是需要继续完善下的，Git会根据用户的名字和邮箱来记录提交。GitHub也是用这些信息来做权限的处理，输入下面的代码进行个人信息的设置，把名称和邮箱替换成你自己的。</p>
+<p>$ git config –global user.name “cnfeat”//用户名<br>$ git config –global user.email  “cnfeat@gmail.com”//填写自己的邮箱<br>若有问题，从头再来一遍，或者到GitHub help中寻找解决方案。</p>
+<p>使用GitHub pages 建立网页<br>与GitHub建立好链接之后，就可以方便的使用它提供的Pages服务。但pages服务每个ID只有一个，大小也只有300M，但作为博客站，已经足够了。</p>
+<p>建立仓库<br>登录GitHub后，点击那个大大的绿色New repository按钮，新建一个仓库：<br>Repository name：dulmcat.github.io<br>Description (optional): 嗯。。括号里都说了是可选的，就随便吧，可填可不填。<br>注意！！ 这里的Repository name必须是你的github用户名.github.io，否则就不是一个github pages而只是单纯的一个仓库了。<br>点击Create Repository 完成创建。</p>
+<p>上传hexo到github pages<br>上传前，需要将Hexo和github想关联起来，在Hexo的配置文件_config.yml文件中,拉到最下面，修改配置文件：</p>
+<p>deploy:<br>  type: git<br>  repository: <a href="https://github.com/Dulmcat/Dulmcat.github.io" target="_blank" rel="external">https://github.com/Dulmcat/Dulmcat.github.io</a><br>  branch: master<br>这里的repository填写的是你的github pages所在库（就是上面刚建好的那个）的地址。<br>这里有个坑，关于type的填写，有说应该是github的，有说是git的，我在两个月前的配置文件type写的github，写这篇文章时发现出错了，这才发现好像是作者在3.0之后改为了git，大家在安装Hexo时可以输入命令hexo-v查看Hexo的版本。在3.0之后需要另外安装hexo-deployer-git。</p>
+<p>$ npm install hexo-deployer-git –save<br>然后</p>
+<p>$ hexo d<br>这里可能会要求填写密码，填了就好。<br>然后在浏览器中输入<a href="https://dulmcat.github.io" target="_blank" rel="external">https://dulmcat.github.io</a> 就可以看到你的博客啦一个在线的博客就这样建好了当然这是我的…要输入 你的github用户名.github.io</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+	<div>
+	
+	</div>
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://fuyk.github.io/2017/08/05/并发concurrent/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="符永坤（FUYK）">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="https://avatars2.githubusercontent.com/u/26453832?v=4&u=126bfb148df1cdfa6d48e7dd63660fd1580fd86e&s=400">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="新力量=新科技">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2017/08/05/并发concurrent/" itemprop="url">并发编程 ：Concurrent （一）</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-08-05T17:13:19+08:00">
+                2017-08-05
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/并发编程/" itemprop="url" rel="index">
+                    <span itemprop="name">并发编程</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2017/08/05/并发concurrent/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count"
+                        data-disqus-identifier="2017/08/05/并发concurrent/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计</span>
+                
+                <span title="字数统计">
+                  5,912
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长</span>
+                
+                <span title="阅读时长">
+                  23
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>并发编程 ：Concurrent  ( 上 )</p>
+<p>最近工作中用到并发相关知识，所以趁机复习一些相关知识，知识确定要间断复习，温故而知新不说，至少让你记忆加深。</p>
+<ol>
+<li>java.util.concurrent – Java 并发工具包</li>
+</ol>
+<ol>
+<li>阻塞队列 BlockingQueue</li>
+</ol>
+<p>java.util.concurrent 包里的 BlockingQueue 接口表示一个线程安放入和提取实例的队列。本小节我将给你演示如何使用这个 BlockingQueue。本节不会讨论如何在 Java 中实现一个你自己的 BlockingQueue。如果你对那个感兴趣，参考《Java 并发指南》</p>
+<p>BlockingQueue 用法</p>
+<p>BlockingQueue 通常用于一个线程生产对象，而另外一个线程消费这些对象的场景。下图是对这个原理的阐述：<br><img src="/2017/08/05/并发concurrent/concurrent1.jpg" alt="并发"></p>
+<p>一个线程往里边放，另外一个线程从里边取的一个 BlockingQueue。</p>
+<p>一个线程将会持续生产新对象并将其插入到队列之中，直到队列达到它所能容纳的临界点。也就是说，它是有限的。如果该阻塞队列到达了其临界点，负责生产的线程将会在往里边插入新对象时发生阻塞。它会一直处于阻塞之中，直到负责消费的线程从队列中拿走一个对象。负责消费的线程将会一直从该阻塞队列中拿出对象。如果消费线程尝试去从一个空的队列中提取对象的话，这个消费线程将会处于阻塞之中，直到一个生产线程把一个对象丢进队列。</p>
+<p>BlockingQueue 的方法</p>
+<p>BlockingQueue 具有 4 组不同的方法用于插入、移除以及对队列中的元素进行检查。如果请求的操作不能得到立即执行的话，每个方法的表现也不同。这些方法如下：</p>
+<p><img src="/2017/08/05/并发concurrent/concurrent2.jpg" alt="并发"></p>
+<p>四组不同的行为方式解释：</p>
+<p>抛异常：如果试图的操作无法立即执行，抛一个异常。<br>特定值：如果试图的操作无法立即执行，返回一个特定的值(常常是 true / false)。<br>阻塞：如果试图的操作无法立即执行，该方法调用将会发生阻塞，直到能够执行。<br>超时：如果试图的操作无法立即执行，该方法调用将会发生阻塞，直到能够执行，但等待时间不会超过给定值。返回一个特定值以告知该操作是否成功(典型的是 true / false)。</p>
+<p>无法向一个 BlockingQueue 中插入 null。如果你试图插入 null，BlockingQueue 将会抛出一个 NullPointerException。</p>
+<p>可以访问到 BlockingQueue 中的所有元素，而不仅仅是开始和结束的元素。比如说，你将一个对象放入队列之中以等待处理，但你的应用想要将其取消掉。那么你可以调用诸如 remove(o) 方法来将队列之中的特定对象进行移除。但是这么干效率并不高(译者注：基于队列的数据结构，获取除开始或结束位置的其他对象的效率不会太高)，因此你尽量不要用这一类的方法，除非你确实不得不那么做。</p>
+<p>BlockingQueue 的实现</p>
+<p>BlockingQueue 是个接口，你需要使用它的实现之一来使用 BlockingQueue。java.util.concurrent 具有以下 BlockingQueue 接口的实现(Java 6)：</p>
+<p>ArrayBlockingQueue<br>DelayQueue<br>LinkedBlockingQueue<br>PriorityBlockingQueue<br>SynchronousQueue</p>
+<p>Java 中使用 BlockingQueue 的例子</p>
+<p>这里是一个 Java 中使用 BlockingQueue 的示例。本示例使用的是 BlockingQueue 接口的 ArrayBlockingQueue 实现。</p>
+<p>首先，BlockingQueueExample 类分别在两个独立的线程中启动了一个 Producer 和 一个 Consumer。</p>
+<p>Producer 向一个共享的 BlockingQueue 中注入字符串，而 Consumer 则会从中把它们拿出来。</p>
+<p>public class BlockingQueueExample {  </p>
+<pre><code>public static void main(String[] args) throws Exception {  
+
+    BlockingQueue queue = new ArrayBlockingQueue(1024);  
+
+    Producer producer = new Producer(queue);  
+    Consumer consumer = new Consumer(queue);  
+
+    new Thread(producer).start();  
+    new Thread(consumer).start();  
+
+    Thread.sleep(4000);  
+}  
+</code></pre><p>}</p>
+<p>以下是 Producer 类。注意它在每次 put() 调用时是如何休眠一秒钟的。这将导致 Consumer 在等待队列中对象的时候发生阻塞。</p>
+<p>public class Producer implements Runnable{  </p>
+<pre><code>protected BlockingQueue queue = null;  
+
+public Producer(BlockingQueue queue) {  
+    this.queue = queue;  
+}  
+
+public void run() {  
+    try {  
+        queue.put(&quot;1&quot;);  
+        Thread.sleep(1000);  
+        queue.put(&quot;2&quot;);  
+        Thread.sleep(1000);  
+        queue.put(&quot;3&quot;);  
+    } catch (InterruptedException e) {  
+        e.printStackTrace();  
+    }  
+}  
+</code></pre><p>}</p>
+<p>以下是 Consumer 类。它只是把对象从队列中抽取出来，然后将它们打印到 System.out。</p>
+<p>public class Consumer implements Runnable{  </p>
+<pre><code>protected BlockingQueue queue = null;  
+
+public Consumer(BlockingQueue queue) {  
+    this.queue = queue;  
+}  
+
+public void run() {  
+    try {  
+        System.out.println(queue.take());  
+        System.out.println(queue.take());  
+        System.out.println(queue.take());  
+    } catch (InterruptedException e) {  
+        e.printStackTrace();  
+    }  
+}  
+</code></pre><p>}</p>
+<ol>
+<li>数组阻塞队列 ArrayBlockingQueue</li>
+</ol>
+<p>ArrayBlockingQueue 类实现了 BlockingQueue 接口。</p>
+<p>ArrayBlockingQueue 是一个有界的阻塞队列，其内部实现是将对象放到一个数组里。有界也就意味着，它不能够存储无限多数量的元素。它有一个同一时间能够存储元素数量的上限。你可以在对其初始化的时候设定这个上限，但之后就无法对这个上限进行修改了(译者注：因为它是基于数组实现的，也就具有数组的特性：一旦初始化，大小就无法修改)。</p>
+<p>‘ArrayBlockingQueue 内部以 FIFO(先进先出)的顺序对元素进行存储。队列中的头元素在所有元素之中是放入时间最久的那个，而尾元素则是最短的那个。</p>
+<p>以下是在使用 ArrayBlockingQueue 的时候对其初始化的一个示例：</p>
+<p>BlockingQueue queue = new ArrayBlockingQueue(1024);  </p>
+<p>queue.put(“1”);  </p>
+<p>Object object = queue.take();</p>
+<p>以下是使用了 Java 泛型的一个 BlockingQueue 示例。注意其中是如何对 String 元素放入和提取的：</p>
+<p>BlockingQueue<string> queue = new ArrayBlockingQueue<string>(1024);  </string></string></p>
+<p>queue.put(“1”);  </p>
+<p>String string = queue.take();</p>
+<ol>
+<li>延迟队列 DelayQueue</li>
+</ol>
+<p>DelayQueue 实现了 BlockingQueue 接口。DelayQueue 对元素进行持有直到一个特定的延迟到期。注入其中的元素必须实现 java.util.concurrent.Delayed 接口，该接口定义：</p>
+<p>public interface Delayed extends Comparable&lt;Delayed&lt; {  </p>
+<p> public long getDelay(TimeUnit timeUnit);  </p>
+<p>}</p>
+<p>DelayQueue 将会在每个元素的 getDelay() 方法返回的值的时间段之后才释放掉该元素。如果返回的是 0 或者负值，延迟将被认为过期，该元素将会在 DelayQueue 的下一次 take 被调用的时候被释放掉。传递给 getDelay 方法的 getDelay 实例是一个枚举类型，它表明了将要延迟的时间段。</p>
+<p>TimeUnit 枚举将会取以下值：</p>
+<p>DAYS<br>HOURS<br>MINUTES<br>SECONDS<br>MILLISECONDS<br>MICROSECONDS<br>NANOSECONDS  </p>
+<p>正如你所看到的，Delayed 接口也继承了 java.lang.Comparable 接口，这也就意味着 Delayed 对象之间可以进行对比。这个可能在对 DelayQueue 队列中的元素进行排序时有用，因此它们可以根据过期时间进行有序释放。以下是使用 DelayQueue 的例子：</p>
+<p>public class DelayQueueExample {  </p>
+<pre><code>public static void main(String[] args) {  
+    DelayQueue queue = new DelayQueue();  
+
+    Delayed element1 = new DelayedElement();  
+
+    queue.put(element1);  
+
+    Delayed element2 = queue.take();  
+}  
+</code></pre><p>}</p>
+<p>DelayedElement 是我所创建的一个 DelayedElement 接口的实现类，它不在 Java.util.concurrent 包里。你需要自行创建你自己的 Delayed 接口的实现以使用 DelayQueue 类。</p>
+<ol>
+<li>链阻塞队列 LinkedBlockingQueue</li>
+</ol>
+<p>LinkedBlockingQueue 类实现了 BlockingQueue 接口。</p>
+<p>LinkedBlockingQueue 内部以一个链式结构(链接节点)对其元素进行存储。如果需要的话，这一链式结构可以选择一个上限。如果没有定义上限，将使用 Integer.MAX_VALUE 作为上限。</p>
+<p>LinkedBlockingQueue 内部以 FIFO(先进先出)的顺序对元素进行存储。队列中的头元素在所有元素之中是放入时间最久的那个，而尾元素则是最短的那个。</p>
+<p>以下是 LinkedBlockingQueue 的初始化和使用示例代码：</p>
+<p>BlockingQueue<string> unbounded = new LinkedBlockingQueue<string>();<br>BlockingQueue<string> bounded   = new LinkedBlockingQueue<string>(1024);  </string></string></string></string></p>
+<p>bounded.put(“Value”);  </p>
+<p>String value = bounded.take();</p>
+<ol>
+<li>具有优先级的阻塞队列 PriorityBlockingQueue</li>
+</ol>
+<p>PriorityBlockingQueue 类实现了 BlockingQueue 接口。</p>
+<p>PriorityBlockingQueue 是一个无界的并发队列。它使用了和类 java.util.PriorityQueue 一样的排序规则。你无法向这个队列中插入 null 值。所有插入到 PriorityBlockingQueue 的元素必须实现 java.lang.Comparable 接口。因此该队列中元素的排序就取决于你自己的 Comparable 实现。注意 PriorityBlockingQueue 对于具有相等优先级(compare() == 0)的元素并不强制任何特定行为。</p>
+<p>同时注意，如果你从一个 PriorityBlockingQueue 获得一个 Iterator 的话，该 Iterator 并不能保证它对元素的遍历是以优先级为序的。</p>
+<p>以下是使用 PriorityBlockingQueue 的示例：</p>
+<p>BlockingQueue queue   = new PriorityBlockingQueue();  </p>
+<pre><code>//String implements java.lang.Comparable  
+queue.put(&quot;Value&quot;);  
+
+String value = queue.take();
+</code></pre><ol>
+<li>同步队列 SynchronousQueue</li>
+</ol>
+<p>SynchronousQueue 类实现了 BlockingQueue 接口。</p>
+<p>SynchronousQueue 是一个特殊的队列，它的内部同时只能够容纳单个元素。如果该队列已有一元素的话，试图向队列中插入一个新元素的线程将会阻塞，直到另一个线程将该元素从队列中抽走。同样，如果该队列为空，试图向队列中抽取一个元素的线程将会阻塞，直到另一个线程向队列中插入了一条新的元素。</p>
+<p>据此，把这个类称作一个队列显然是夸大其词了。它更多像是一个汇合点。</p>
+<ol>
+<li>阻塞双端队列 BlockingDeque</li>
+</ol>
+<p>java.util.concurrent 包里的 BlockingDeque 接口表示一个线程安放入和提取实例的双端队列。本小节我将给你演示如何使用 BlockingDeque。BlockingDeque 类是一个双端队列，在不能够插入元素时，它将阻塞住试图插入元素的线程；在不能够抽取元素时，它将阻塞住试图抽取的线程。deque(双端队列) 是 “Double Ended Queue” 的缩写。因此，双端队列是一个你可以从任意一端插入或者抽取元素的队列。</p>
+<p>BlockingDeque 的使用</p>
+<p>在线程既是一个队列的生产者又是这个队列的消费者的时候可以使用到 BlockingDeque。如果生产者线程需要在队列的两端都可以插入数据，消费者线程需要在队列的两端都可以移除数据，这个时候也可以使用 BlockingDeque。</p>
+<p><img src="/2017/08/05/并发concurrent/concurrent3.jpg" alt="并发"></p>
+<p>一个 BlockingDeque – 线程在双端队列的两端都可以插入和提取元素。</p>
+<p>一个线程生产元素，并把它们插入到队列的任意一端。如果双端队列已满，插入线程将被阻塞，直到一个移除线程从该队列中移出了一个元素。如果双端队列为空，移除线程将被阻塞，直到一个插入线程向该队列插入了一个新元素。</p>
+<p>BlockingDeque 的方法</p>
+<p>BlockingDeque 具有 4 组不同的方法用于插入、移除以及对双端队列中的元素进行检查。如果请求的操作不能得到立即执行的话，每个方法的表现也不同。这些方法如下：</p>
+<p><img src="/2017/08/05/并发concurrent/concurrent4.jpg" alt="并发"></p>
+<p>四组不同的行为方式解释：</p>
+<p>抛异常：如果试图的操作无法立即执行，抛一个异常。<br>特定值：如果试图的操作无法立即执行，返回一个特定的值(常常是 true / false)。<br>阻塞：如果试图的操作无法立即执行，该方法调用将会发生阻塞，直到能够执行。<br>超时：如果试图的操作无法立即执行，该方法调用将会发生阻塞，直到能够执行，但等待时间不会超过给定值。返回一个特定值以告知该操作是否成功(典型的是 true / false)。</p>
+<p>BlockingDeque 继承自 BlockingQueue</p>
+<p>BlockingDeque 接口继承自 BlockingQueue 接口。</p>
+<p>这就意味着你可以像使用一个 BlockingQueue 那样使用 BlockingDeque。如果你这么干的话，各种插入方法将会把新元素添加到双端队列的尾端，而移除方法将会把双端队列的首端的元素移除。正如 BlockingQueue 接口的插入和移除方法一样。</p>
+<p>以下是 BlockingDeque 对 BlockingQueue 接口的方法的具体内部实现：</p>
+<p><img src="/2017/08/05/并发concurrent/concurrent5.jpg" alt="并发"></p>
+<p>BlockingDeque 的实现</p>
+<p>既然 BlockingDeque 是一个接口，那么你想要使用它的话就得使用它的众多的实现类的其中一个。java.util.concurrent 包提供了以下 BlockingDeque 接口的实现类：</p>
+<p>LinkedBlockingDeque</p>
+<p>BlockingDeque 代码示例</p>
+<p>以下是如何使用 BlockingDeque 方法的一个简短代码示例：</p>
+<p>BlockingDeque<string> deque = new LinkedBlockingDeque<string>();  </string></string></p>
+<p>deque.addFirst(“1”);<br>deque.addLast(“2”);  </p>
+<p>String two = deque.takeLast();<br>String one = deque.takeFirst();</p>
+<ol>
+<li>链阻塞双端队列 LinkedBlockingDeque</li>
+</ol>
+<p>LinkedBlockingDeque 类实现了 BlockingDeque 接口。</p>
+<p>deque(双端队列) 是 “Double Ended Queue” 的缩写。因此，双端队列是一个你可以从任意一端插入或者抽取元素的队列。(译者注：唐僧啊，受不了。)LinkedBlockingDeque 是一个双端队列，在它为空的时候，一个试图从中抽取数据的线程将会阻塞，无论该线程是试图从哪一端抽取数据。以下是 LinkedBlockingDeque 实例化以及使用的示例：</p>
+<p>BlockingDeque<string> deque = new LinkedBlockingDeque<string>();  </string></string></p>
+<p>deque.addFirst(“1”);<br>deque.addLast(“2”);  </p>
+<p>String two = deque.takeLast();<br>String one = deque.takeFirst();</p>
+<ol>
+<li>并发 Map(映射) ConcurrentMap</li>
+</ol>
+<p>java.util.concurrent.ConcurrentMap</p>
+<p>java.util.concurrent.ConcurrentMap 接口表示了一个能够对别人的访问(插入和提取)进行并发处理的 java.util.Map。ConcurrentMap 除了从其父接口 java.util.Map 继承来的方法之外还有一些额外的原子性方法。</p>
+<p>ConcurrentMap 的实现</p>
+<p>既然 ConcurrentMap 是个接口，你想要使用它的话就得使用它的实现类之一。java.util.concurrent 包具备 ConcurrentMap 接口的以下实现类：</p>
+<p>ConcurrentHashMap</p>
+<p>ConcurrentHashMap</p>
+<p>ConcurrentHashMap 和 java.util.HashTable 类很相似，但 ConcurrentHashMap 能够提供比 HashTable 更好的并发性能。在你从中读取对象的时候 ConcurrentHashMap 并不会把整个 Map 锁住。</p>
+<p>此外，在你向其中写入对象的时候，ConcurrentHashMap 也不会锁住整个 Map。它的内部只是把 Map 中正在被写入的部分进行锁定。</p>
+<p>另外一个不同点是，在被遍历的时候，即使是 ConcurrentHashMap 被改动，它也不会抛 ConcurrentModificationException。尽管 Iterator 的设计不是为多个线程的同时使用。更多关于 ConcurrentMap 和 ConcurrentHashMap 的细节请参考官方文档。</p>
+<p>ConcurrentMap 例子</p>
+<p>以下是如何使用 ConcurrentMap 接口的一个例子。</p>
+<p>本示例使用了 ConcurrentHashMap 实现类：</p>
+<p>ConcurrentMap concurrentMap = new ConcurrentHashMap();  </p>
+<p>concurrentMap.put(“key”, “value”);  </p>
+<p>Object value = concurrentMap.get(“key”);</p>
+<ol>
+<li>并发导航映射 ConcurrentNavigableMap</li>
+</ol>
+<p>java.util.concurrent.ConcurrentNavigableMap 是一个支持并发访问的 java.util.NavigableMap，它还能让它的子 map 具备并发访问的能力。所谓的 “子 map” 指的是诸如 headMap()，subMap()，tailMap() 之类的方法返回的 map。</p>
+<p>NavigableMap 中的方法不再赘述，本小节我们来看一下 ConcurrentNavigableMap 添加的方法。</p>
+<p>headMap()</p>
+<p>headMap(T toKey) 方法返回一个包含了小于给定 toKey 的 key 的子 map。如果你对原始 map 里的元素做了改动，这些改动将影响到子 map 中的元素(译者注：map 集合持有的其实只是对象的引用)。以下示例演示了对 headMap() 方法的使用：</p>
+<p>ConcurrentNavigableMap map = new ConcurrentSkipListMap();  </p>
+<p>map.put(“1”, “one”);<br>map.put(“2”, “two”);<br>map.put(“3”, “three”);  </p>
+<p>ConcurrentNavigableMap headMap = map.headMap(“2”);</p>
+<p>headMap 将指向一个只含有键 “1″ 的 ConcurrentNavigableMap，因为只有这一个键小于 “2″。关于这个方法及其重载版本具体是怎么工作的细节请参考 Java 文档。</p>
+<p>tailMap()</p>
+<p>tailMap(T fromKey) 方法返回一个包含了不小于给定 fromKey 的 key 的子 map。</p>
+<p>如果你对原始 map 里的元素做了改动，这些改动将影响到子 map 中的元素(译者注：map 集合持有的其实只是对象的引用)。</p>
+<p>以下示例演示了对 tailMap() 方法的使用：</p>
+<p>ConcurrentNavigableMap map = new ConcurrentSkipListMap();  </p>
+<p>map.put(“1”, “one”);<br>map.put(“2”, “two”);<br>map.put(“3”, “three”);  </p>
+<p>ConcurrentNavigableMap tailMap = map.tailMap(“2”);</p>
+<p>tailMap 将拥有键 “2″ 和 “3″，因为它们不小于给定键 “2″。关于这个方法及其重载版本具体是怎么工作的细节请参考 Java 文档。</p>
+<p>subMap()</p>
+<p>subMap() 方法返回原始 map 中，键介于 from(包含) 和 to (不包含) 之间的子 map。</p>
+<p>示例如下：</p>
+<p>ConcurrentNavigableMap map = new ConcurrentSkipListMap();  </p>
+<p>map.put(“1”, “one”);<br>map.put(“2”, “two”);<br>map.put(“3”, “three”);  </p>
+<p>ConcurrentNavigableMap subMap = map.subMap(“2”, “3”);</p>
+<p>返回的 submap 只包含键 “2″，因为只有它满足不小于 “2″，比 “3″ 小。</p>
+<p>更多方法</p>
+<p>ConcurrentNavigableMap 接口还有其他一些方法可供使用，<br>比如：</p>
+<p>descendingKeySet()<br>descendingMap()<br>navigableKeySet()</p>
+<p>关于这些方法更多信息参考官方 Java 文档。</p>
+<ol>
+<li>闭锁 CountDownLatch</li>
+</ol>
+<p>java.util.concurrent.CountDownLatch 是一个并发构造，它允许一个或多个线程等待一系列指定操作的完成。</p>
+<p>CountDownLatch 以一个给定的数量初始化。countDown() 每被调用一次，这一数量就减一。通过调用 await() 方法之一，线程可以阻塞等待这一数量到达零。以下是一个简单示例。</p>
+<p>Decrementer 三次调用 countDown() 之后，等待中的 Waiter 才会从 await() 调用中释放出来。</p>
+<p>CountDownLatch latch = new CountDownLatch(3);  </p>
+<p>Waiter      waiter      = new Waiter(latch);<br>Decrementer decrementer = new Decrementer(latch);  </p>
+<p>new Thread(waiter)     .start();<br>new Thread(decrementer).start();  </p>
+<p>Thread.sleep(4000);  </p>
+<p>public class Waiter implements Runnable{  </p>
+<pre><code>CountDownLatch latch = null;  
+
+public Waiter(CountDownLatch latch) {  
+    this.latch = latch;  
+}  
+
+public void run() {  
+    try {  
+        latch.await();  
+    } catch (InterruptedException e) {  
+        e.printStackTrace();  
+    }  
+
+    System.out.println(&quot;Waiter Released&quot;);  
+}  
+</code></pre><p>}  </p>
+<p>public class Decrementer implements Runnable {  </p>
+<pre><code>CountDownLatch latch = null;  
+
+public Decrementer(CountDownLatch latch) {  
+    this.latch = latch;  
+}  
+
+public void run() {  
+
+    try {  
+        Thread.sleep(1000);  
+        this.latch.countDown();  
+
+        Thread.sleep(1000);  
+        this.latch.countDown();  
+
+        Thread.sleep(1000);  
+        this.latch.countDown();  
+    } catch (InterruptedException e) {  
+        e.printStackTrace();  
+    }  
+}  
+</code></pre><p>}</p>
+<ol>
+<li>栅栏 CyclicBarrier</li>
+</ol>
+<p>java.util.concurrent.CyclicBarrier 类是一种同步机制，它能够对处理一些算法的线程实现同步。换句话讲，它就是一个所有线程必须等待的一个栅栏，直到所有线程都到达这里，然后所有线程才可以继续做其他事情。</p>
+<p>图示如下：</p>
+<p><img src="/2017/08/05/并发concurrent/concurrent6.jpg" alt="并发"></p>
+<p>两个线程在栅栏旁等待对方。</p>
+<p>通过调用 CyclicBarrier 对象的 await() 方法，两个线程可以实现互相等待。一旦 N 个线程在等待 CyclicBarrier 达成，所有线程将被释放掉去继续运行。</p>
+<p>创建一个 CyclicBarrier</p>
+<p>在创建一个 CyclicBarrier 的时候你需要定义有多少线程在被释放之前等待栅栏。</p>
+<p>创建 CyclicBarrier 示例：</p>
+<p>CyclicBarrier barrier = new CyclicBarrier(2);</p>
+<p>等待一个 CyclicBarrier</p>
+<p>以下演示了如何让一个线程等待一个 CyclicBarrier：</p>
+<p>barrier.await();</p>
+<p>当然，你也可以为等待线程设定一个超时时间。等待超过了超时时间之后，即便还没有达成 N 个线程等待 CyclicBarrier 的条件，该线程也会被释放出来。以下是定义超时时间示例：</p>
+<p>barrier.await(10, TimeUnit.SECONDS);</p>
+<p>满足以下任何条件都可以让等待 CyclicBarrier 的线程释放：</p>
+<p>最后一个线程也到达 CyclicBarrier(调用 await())<br>当前线程被其他线程打断(其他线程调用了这个线程的 interrupt() 方法)<br>其他等待栅栏的线程被打断<br>其他等待栅栏的线程因超时而被释放<br>外部线程调用了栅栏的 CyclicBarrier.reset() 方法</p>
+<p>CyclicBarrier 行动</p>
+<p>CyclicBarrier 支持一个栅栏行动，栅栏行动是一个 Runnable 实例，一旦最后等待栅栏的线程抵达，该实例将被执行。你可以在 CyclicBarrier 的构造方法中将 Runnable 栅栏行动传给它：</p>
+<p>Runnable barrierAction = … ;<br>CyclicBarrier barrier = new CyclicBarrier(2, barrierAction);</p>
+<p>CyclicBarrier 示例</p>
+<p>以下代码演示了如何使用 CyclicBarrier：</p>
+<p>Runnable barrier1Action = new Runnable() {<br>    public void run() {<br>        System.out.println(“BarrierAction 1 executed “);<br>    }<br>};<br>Runnable barrier2Action = new Runnable() {<br>    public void run() {<br>        System.out.println(“BarrierAction 2 executed “);<br>    }<br>};  </p>
+<p>CyclicBarrier barrier1 = new CyclicBarrier(2, barrier1Action);<br>CyclicBarrier barrier2 = new CyclicBarrier(2, barrier2Action);  </p>
+<p>CyclicBarrierRunnable barrierRunnable1 =<br>        new CyclicBarrierRunnable(barrier1, barrier2);  </p>
+<p>CyclicBarrierRunnable barrierRunnable2 =<br>        new CyclicBarrierRunnable(barrier1, barrier2);  </p>
+<p>new Thread(barrierRunnable1).start();<br>new Thread(barrierRunnable2).start();</p>
+<p>CyclicBarrierRunnable 类：</p>
+<p>public class CyclicBarrierRunnable implements Runnable{  </p>
+<pre><code>CyclicBarrier barrier1 = null;  
+CyclicBarrier barrier2 = null;  
+
+public CyclicBarrierRunnable(  
+        CyclicBarrier barrier1,  
+        CyclicBarrier barrier2) {  
+
+    this.barrier1 = barrier1;  
+    this.barrier2 = barrier2;  
+}  
+
+public void run() {  
+    try {  
+        Thread.sleep(1000);  
+        System.out.println(Thread.currentThread().getName() +  
+                            &quot; waiting at barrier 1&quot;);  
+        this.barrier1.await();  
+
+        Thread.sleep(1000);  
+        System.out.println(Thread.currentThread().getName() +  
+                            &quot; waiting at barrier 2&quot;);  
+        this.barrier2.await();  
+
+        System.out.println(Thread.currentThread().getName() +  
+                            &quot; done!&quot;);  
+
+    } catch (InterruptedException e) {  
+        e.printStackTrace();  
+    } catch (BrokenBarrierException e) {  
+        e.printStackTrace();  
+    }  
+}  
+</code></pre><p>}</p>
+<p>以上代码控制台输出如下。注意每个线程写入控制台的时序可能会跟你实际执行不一样。比如有时 Thread-0 先打印，有时 Thread-1 先打印。</p>
+<p>Thread-0 waiting at barrier 1<br>Thread-1 waiting at barrier 1<br>BarrierAction 1 executed<br>Thread-1 waiting at barrier 2<br>Thread-0 waiting at barrier 2<br>BarrierAction 2 executed<br>Thread-0 done!<br>Thread-1 done!</p>
+<ol>
+<li>交换机 Exchanger</li>
+</ol>
+<p>java.util.concurrent.Exchanger 类表示一种两个线程可以进行互相交换对象的会和点。这种机制图示如下：</p>
+<p><img src="/2017/08/05/并发concurrent/concurrent7.jpg" alt="并发"></p>
+<p>两个线程通过一个 Exchanger 交换对象。<br>交换对象的动作由 Exchanger 的两个 exchange() 方法的其中一个完成。</p>
+<p>以下是一个示例：</p>
+<p>Exchanger exchanger = new Exchanger();  </p>
+<p>ExchangerRunnable exchangerRunnable1 =<br>        new ExchangerRunnable(exchanger, “A”);  </p>
+<p>ExchangerRunnable exchangerRunnable2 =<br>        new ExchangerRunnable(exchanger, “B”);  </p>
+<p>new Thread(exchangerRunnable1).start();<br>new Thread(exchangerRunnable2).start();</p>
+<p>ExchangerRunnable 代码：</p>
+<p>public class ExchangerRunnable implements Runnable{  </p>
+<pre><code>Exchanger exchanger = null;  
+Object    object    = null;  
+
+public ExchangerRunnable(Exchanger exchanger, Object object) {  
+    this.exchanger = exchanger;  
+    this.object = object;  
+}  
+
+public void run() {  
+    try {  
+        Object previous = this.object;  
+
+        this.object = this.exchanger.exchange(this.object);  
+
+        System.out.println(  
+                Thread.currentThread().getName() +  
+                &quot; exchanged &quot; + previous + &quot; for &quot; + this.object  
+        );  
+    } catch (InterruptedException e) {  
+        e.printStackTrace();  
+    }  
+}  
+</code></pre><p>}</p>
+<p>以上程序输出：Thread-0 exchanged A for BThread-1 exchanged B for A</p>
+<ol>
+<li>信号量 Semaphore</li>
+</ol>
+<p>java.util.concurrent.Semaphore 类是一个计数信号量。这就意味着它具备两个主要方法：</p>
+<p>acquire()<br>release()</p>
+<p>计数信号量由一个指定数量的 “许可” 初始化。每调用一次 acquire()，一个许可会被调用线程取走。每调用一次 release()，一个许可会被返还给信号量。因此，在没有任何 release() 调用时，最多有 N 个线程能够通过 acquire() 方法，N 是该信号量初始化时的许可的指定数量。这些许可只是一个简单的计数器。这里没啥奇特的地方。</p>
+<p>Semaphore 用法</p>
+<p>信号量主要有两种用途：</p>
+<p>保护一个重要(代码)部分防止一次超过 N 个线程进入。<br>在两个线程之间发送信号。</p>
+<p>保护重要部分</p>
+<p>如果你将信号量用于保护一个重要部分，试图进入这一部分的代码通常会首先尝试获得一个许可，然后才能进入重要部分(代码块)，执行完之后，再把许可释放掉。</p>
+<p>比如这样：</p>
+<p>Semaphore semaphore = new Semaphore(1);  </p>
+<p>//critical section<br>semaphore.acquire();  </p>
+<p>…  </p>
+<p>semaphore.release();</p>
+<p>在线程之间发送信号</p>
+<p>如果你将一个信号量用于在两个线程之间传送信号，通常你应该用一个线程调用 acquire() 方法，而另一个线程调用 release() 方法。如果没有可用的许可，acquire() 调用将会阻塞，直到一个许可被另一个线程释放出来。同理，如果无法往信号量释放更多许可时，一个 release() 调用也会阻塞。</p>
+<p>通过这个可以对多个线程进行协调。比如，如果线程 1 将一个对象插入到了一个共享列表(list)之后之后调用了 acquire()，而线程 2 则在从该列表中获取一个对象之前调用了 release()，这时你其实已经创建了一个阻塞队列。信号量中可用的许可的数量也就等同于该阻塞队列能够持有的元素个数。</p>
+<p>公平</p>
+<p>没有办法保证线程能够公平地可从信号量中获得许可。也就是说，无法担保掉第一个调用 acquire() 的线程会是第一个获得一个许可的线程。如果第一个线程在等待一个许可时发生阻塞，而第二个线程前来索要一个许可的时候刚好有一个许可被释放出来，那么它就可能会在第一个线程之前获得许可。如果你想要强制公平，Semaphore 类有一个具有一个布尔类型的参数的构造子，通过这个参数以告知 Semaphore 是否要强制公平。强制公平会影响到并发性能，所以除非你确实需要它否则不要启用它。</p>
+<p>以下是如何在公平模式创建一个 Semaphore 的示例：</p>
+<p>Semaphore semaphore = new Semaphore(1, true);</p>
+<p>更多方法</p>
+<p>java.util.concurrent.Semaphore 类还有很多方法，比如：</p>
+<p>availablePermits()<br>acquireUninterruptibly()<br>drainPermits()<br>hasQueuedThreads()<br>getQueuedThreads()<br>tryAcquire()<br>等等</p>
+<p>这些方法的细节请参考 Java 文档。</p>
+<p>@本知识本人借阅了ImportNew</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+	<div>
+	
+	</div>
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://fuyk.github.io/2017/08/04/myGitOneDay/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -2023,7 +2825,7 @@ throw new NoClassDefFoundError(localClassNotFoundException.getMessage());
           
             <div class="site-state-item site-state-posts">
               <a href="/archives/">
-                <span class="site-state-item-count">15</span>
+                <span class="site-state-item-count">17</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -2045,7 +2847,7 @@ throw new NoClassDefFoundError(localClassNotFoundException.getMessage());
             
             <div class="site-state-item site-state-tags">
               <a href="/tags/index.html">
-                <span class="site-state-item-count">10</span>
+                <span class="site-state-item-count">11</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
@@ -2171,7 +2973,7 @@ throw new NoClassDefFoundError(localClassNotFoundException.getMessage());
 
 <div class="theme-info">
   <div class="powered-by"></div>
-  <span class="post-count">博客全站共34.4k字</span>
+  <span class="post-count">博客全站共59.3k字</span>
 </div>
 
         
