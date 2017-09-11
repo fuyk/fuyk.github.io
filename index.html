@@ -589,6 +589,200 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://fuyk.github.io/2017/09/11/PowerDesigner-2/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="符永坤（FUYK）">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="https://avatars2.githubusercontent.com/u/26453832?v=4&u=126bfb148df1cdfa6d48e7dd63660fd1580fd86e&s=400">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="新力量=新科技">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2017/09/11/PowerDesigner-2/" itemprop="url">PowerDesigner(2)-把PowerDesigner里面的表导出Excel</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-09-11T18:33:58+08:00">
+                2017-09-11
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/工具使用/" itemprop="url" rel="index">
+                    <span itemprop="name">工具使用</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2017/09/11/PowerDesigner-2/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count"
+                        data-disqus-identifier="2017/09/11/PowerDesigner-2/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计</span>
+                
+                <span title="字数统计">
+                  793
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长</span>
+                
+                <span title="阅读时长">
+                  5
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>PS:选中tables<br>ctrl + shift +x 然后运行以下脚本</p>
+<hr>
+<p>Option Explicit<br>Dim rowsNum<br>rowsNum = 0<br>‘—————————————————————————–<br>‘ Main function<br>‘—————————————————————————–<br>‘ Get the current active model<br>Dim Model<br>Set Model = ActiveModel<br>If (Model Is Nothing) Or (Not Model.IsKindOf(PdPDM.cls_Model)) Then<br>MsgBox “The current model is not an PDM model.”<br>Else<br>‘ Get the tables collection<br>‘创建EXCEL APP<br>dim beginrow<br>DIM EXCEL, SHEET, SHEETLIST<br>set EXCEL = CREATEOBJECT(“Excel.Application”)<br>EXCEL.workbooks.add(-4167)’添加工作表<br>EXCEL.workbooks(1).sheets(1).name =”表结构”<br>set SHEET = EXCEL.workbooks(1).sheets(“表结构”)</p>
+<p>EXCEL.workbooks(1).sheets.add<br>EXCEL.workbooks(1).sheets(1).name =”目录”<br>set SHEETLIST = EXCEL.workbooks(1).sheets(“目录”)<br>ShowTableList Model,SHEETLIST</p>
+<p>ShowProperties Model, SHEET,SHEETLIST</p>
+<p>EXCEL.workbooks(1).Sheets(2).Select<br>EXCEL.visible = true<br>‘设置列宽和自动换行<br>sheet.Columns(1).ColumnWidth = 20<br>sheet.Columns(2).ColumnWidth = 20<br>sheet.Columns(3).ColumnWidth = 20<br>sheet.Columns(4).ColumnWidth = 40<br>sheet.Columns(5).ColumnWidth = 10<br>sheet.Columns(6).ColumnWidth = 10<br>sheet.Columns(1).WrapText =true<br>sheet.Columns(2).WrapText =true<br>sheet.Columns(4).WrapText =true<br>‘不显示网格线<br>EXCEL.ActiveWindow.DisplayGridlines = False</p>
+<p>End If<br>‘—————————————————————————–<br>‘ Show properties of tables<br>‘—————————————————————————–<br>Sub ShowProperties(mdl, sheet,SheetList)<br>‘ Show tables of the current model/package<br>rowsNum=0<br>beginrow = rowsNum+1<br>Dim rowIndex<br>rowIndex=3<br>‘ For each table<br>output “begin”<br>Dim tab<br>For Each tab In mdl.tables<br>ShowTable tab,sheet,rowIndex,sheetList<br>rowIndex = rowIndex +1<br>Next<br>if mdl.tables.count &gt; 0 then<br>sheet.Range(“A” &amp; beginrow + 1 &amp; “:A” &amp; rowsNum).Rows.Group<br>end if<br>output “end”<br>End Sub<br>‘—————————————————————————–<br>‘ Show table properties<br>‘—————————————————————————–<br>Sub ShowTable(tab, sheet,rowIndex,sheetList)<br>If IsObject(tab) Then<br>Dim rangFlag<br>rowsNum = rowsNum + 1<br>‘ Show properties<br>Output “================================”<br>sheet.cells(rowsNum, 1) =tab.name<br>sheet.cells(rowsNum, 1).HorizontalAlignment=3<br>sheet.cells(rowsNum, 2) = tab.code<br>‘sheet.cells(rowsNum, 5).HorizontalAlignment=3<br>‘sheet.cells(rowsNum, 6) = “”<br>‘sheet.cells(rowsNum, 7) = “表说明”<br>sheet.cells(rowsNum, 3) = tab.comment<br>‘sheet.cells(rowsNum, 8).HorizontalAlignment=3<br>sheet.Range(sheet.cells(rowsNum, 3),sheet.cells(rowsNum, 7)).Merge<br>‘设置超链接，从目录点击表名去查看表结构<br>‘字段中文名 字段英文名 字段类型 注释 是否主键 是否非空 默认值<br>sheetList.Hyperlinks.Add sheetList.cells(rowIndex,2), “”,”表结构”&amp;”!B”&amp;rowsNum<br>rowsNum = rowsNum + 1<br>sheet.cells(rowsNum, 1) = “字段中文名”<br>sheet.cells(rowsNum, 2) = “字段英文名”<br>sheet.cells(rowsNum, 3) = “字段类型”<br>sheet.cells(rowsNum, 4) = “注释”<br>sheet.cells(rowsNum, 5) = “是否主键”<br>sheet.cells(rowsNum, 6) = “是否非空”<br>sheet.cells(rowsNum, 7) = “默认值”<br>‘设置边框<br>sheet.Range(sheet.cells(rowsNum-1, 1),sheet.cells(rowsNum, 7)).Borders.LineStyle = “1”<br>‘sheet.Range(sheet.cells(rowsNum-1, 4),sheet.cells(rowsNum, 9)).Borders.LineStyle = “1”<br>‘字体为10号<br>sheet.Range(sheet.cells(rowsNum-1, 1),sheet.cells(rowsNum, 7)).Font.Size=10<br>Dim col ‘ running column<br>Dim colsNum<br>colsNum = 0<br>for each col in tab.columns<br>rowsNum = rowsNum + 1<br>colsNum = colsNum + 1<br>sheet.cells(rowsNum, 1) = col.name<br>‘sheet.cells(rowsNum, 3) = “”<br>‘sheet.cells(rowsNum, 4) = col.name<br>sheet.cells(rowsNum, 2) = col.code<br>sheet.cells(rowsNum, 3) = col.datatype<br>sheet.cells(rowsNum, 4) = col.comment<br>If col.Primary = true Then<br>sheet.cells(rowsNum, 5) = “Y”<br>Else<br>sheet.cells(rowsNum, 5) = “ “<br>End If<br>If col.Mandatory = true Then<br>sheet.cells(rowsNum, 6) = “Y”<br>Else<br>sheet.cells(rowsNum, 6) = “ “<br>End If<br>sheet.cells(rowsNum, 7) = col.defaultvalue<br>next<br>sheet.Range(sheet.cells(rowsNum-colsNum+1,1),sheet.cells(rowsNum,7)).Borders.LineStyle = “3”<br>‘sheet.Range(sheet.cells(rowsNum-colsNum+1,4),sheet.cells(rowsNum,9)).Borders.LineStyle = “3”<br>sheet.Range(sheet.cells(rowsNum-colsNum+1,1),sheet.cells(rowsNum,7)).Font.Size = 10<br>rowsNum = rowsNum + 2</p>
+<p>Output “FullDescription: “ + tab.Name<br>End If</p>
+<p>End Sub<br>‘—————————————————————————–<br>‘ Show List Of Table<br>‘—————————————————————————–<br>Sub ShowTableList(mdl, SheetList)<br>‘ Show tables of the current model/package<br>Dim rowsNo<br>rowsNo=1<br>‘ For each table<br>output “begin”<br>SheetList.cells(rowsNo, 1) = “主题”<br>SheetList.cells(rowsNo, 2) = “表中文名”<br>SheetList.cells(rowsNo, 3) = “表英文名”<br>SheetList.cells(rowsNo, 4) = “表说明”<br>rowsNo = rowsNo + 1<br>SheetList.cells(rowsNo, 1) = mdl.name<br>Dim tab<br>For Each tab In mdl.tables<br>If IsObject(tab) Then<br>rowsNo = rowsNo + 1<br>SheetList.cells(rowsNo, 1) = “”<br>SheetList.cells(rowsNo, 2) = tab.name<br>SheetList.cells(rowsNo, 3) = tab.code<br>SheetList.cells(rowsNo, 4) = tab.comment<br>End If<br>Next<br>SheetList.Columns(1).ColumnWidth = 20<br>SheetList.Columns(2).ColumnWidth = 20<br>SheetList.Columns(3).ColumnWidth = 30<br>SheetList.Columns(4).ColumnWidth = 60<br>output “end”<br>End Sub</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+	<div>
+	
+	</div>
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://fuyk.github.io/2017/09/06/23种设计模式/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -4110,191 +4304,6 @@ private List&lt;MyRecursiveTask&gt; createSubtasks() {
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://fuyk.github.io/2017/08/07/为什么走上这路/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="符永坤（FUYK）">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="https://avatars2.githubusercontent.com/u/26453832?v=4&u=126bfb148df1cdfa6d48e7dd63660fd1580fd86e&s=400">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="新力量=新科技">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2017/08/07/为什么走上这路/" itemprop="url">whystudyIT</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-08-07T14:41:45+08:00">
-                2017-08-07
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/关于我/" itemprop="url" rel="index">
-                    <span itemprop="name">关于我</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2017/08/07/为什么走上这路/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count disqus-comment-count"
-                        data-disqus-identifier="2017/08/07/为什么走上这路/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-            <div class="post-wordcount">
-              
-                
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-file-word-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">字数统计</span>
-                
-                <span title="字数统计">
-                  0
-                </span>
-              
-
-              
-                <span class="post-meta-divider">|</span>
-              
-
-              
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-clock-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">阅读时长</span>
-                
-                <span title="阅读时长">
-                  1
-                </span>
-              
-            </div>
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-	<div>
-	
-	</div>
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -4345,7 +4354,7 @@ private List&lt;MyRecursiveTask&gt; createSubtasks() {
           
             <div class="site-state-item site-state-posts">
               <a href="/archives/">
-                <span class="site-state-item-count">17</span>
+                <span class="site-state-item-count">19</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -4356,7 +4365,7 @@ private List&lt;MyRecursiveTask&gt; createSubtasks() {
             
             <div class="site-state-item site-state-categories">
               <a href="/categories/index.html">
-                <span class="site-state-item-count">10</span>
+                <span class="site-state-item-count">11</span>
                 <span class="site-state-item-name">分类</span>
               </a>
             </div>
@@ -4367,7 +4376,7 @@ private List&lt;MyRecursiveTask&gt; createSubtasks() {
             
             <div class="site-state-item site-state-tags">
               <a href="/tags/index.html">
-                <span class="site-state-item-count">11</span>
+                <span class="site-state-item-count">12</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
@@ -4493,7 +4502,7 @@ private List&lt;MyRecursiveTask&gt; createSubtasks() {
 
 <div class="theme-info">
   <div class="powered-by"></div>
-  <span class="post-count">博客全站共59.3k字</span>
+  <span class="post-count">博客全站共61.2k字</span>
 </div>
 
         

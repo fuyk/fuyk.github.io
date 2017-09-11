@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://fuyk.github.io/"/>
-  <updated>2017-09-06T08:29:05.528Z</updated>
+  <updated>2017-09-11T10:36:48.269Z</updated>
   <id>http://fuyk.github.io/</id>
   
   <author>
@@ -14,6 +14,39 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>PowerDesigner(2)-把PowerDesigner里面的表导出Excel</title>
+    <link href="http://fuyk.github.io/2017/09/11/PowerDesigner-2/"/>
+    <id>http://fuyk.github.io/2017/09/11/PowerDesigner-2/</id>
+    <published>2017-09-11T10:33:58.000Z</published>
+    <updated>2017-09-11T10:36:48.269Z</updated>
+    
+    <content type="html"><![CDATA[<p>PS:选中tables<br>ctrl + shift +x 然后运行以下脚本</p>
+<hr>
+<p>Option Explicit<br>Dim rowsNum<br>rowsNum = 0<br>‘—————————————————————————–<br>‘ Main function<br>‘—————————————————————————–<br>‘ Get the current active model<br>Dim Model<br>Set Model = ActiveModel<br>If (Model Is Nothing) Or (Not Model.IsKindOf(PdPDM.cls_Model)) Then<br>MsgBox “The current model is not an PDM model.”<br>Else<br>‘ Get the tables collection<br>‘创建EXCEL APP<br>dim beginrow<br>DIM EXCEL, SHEET, SHEETLIST<br>set EXCEL = CREATEOBJECT(“Excel.Application”)<br>EXCEL.workbooks.add(-4167)’添加工作表<br>EXCEL.workbooks(1).sheets(1).name =”表结构”<br>set SHEET = EXCEL.workbooks(1).sheets(“表结构”)</p>
+<p>EXCEL.workbooks(1).sheets.add<br>EXCEL.workbooks(1).sheets(1).name =”目录”<br>set SHEETLIST = EXCEL.workbooks(1).sheets(“目录”)<br>ShowTableList Model,SHEETLIST</p>
+<p>ShowProperties Model, SHEET,SHEETLIST</p>
+<p>EXCEL.workbooks(1).Sheets(2).Select<br>EXCEL.visible = true<br>‘设置列宽和自动换行<br>sheet.Columns(1).ColumnWidth = 20<br>sheet.Columns(2).ColumnWidth = 20<br>sheet.Columns(3).ColumnWidth = 20<br>sheet.Columns(4).ColumnWidth = 40<br>sheet.Columns(5).ColumnWidth = 10<br>sheet.Columns(6).ColumnWidth = 10<br>sheet.Columns(1).WrapText =true<br>sheet.Columns(2).WrapText =true<br>sheet.Columns(4).WrapText =true<br>‘不显示网格线<br>EXCEL.ActiveWindow.DisplayGridlines = False</p>
+<p>End If<br>‘—————————————————————————–<br>‘ Show properties of tables<br>‘—————————————————————————–<br>Sub ShowProperties(mdl, sheet,SheetList)<br>‘ Show tables of the current model/package<br>rowsNum=0<br>beginrow = rowsNum+1<br>Dim rowIndex<br>rowIndex=3<br>‘ For each table<br>output “begin”<br>Dim tab<br>For Each tab In mdl.tables<br>ShowTable tab,sheet,rowIndex,sheetList<br>rowIndex = rowIndex +1<br>Next<br>if mdl.tables.count &gt; 0 then<br>sheet.Range(“A” &amp; beginrow + 1 &amp; “:A” &amp; rowsNum).Rows.Group<br>end if<br>output “end”<br>End Sub<br>‘—————————————————————————–<br>‘ Show table properties<br>‘—————————————————————————–<br>Sub ShowTable(tab, sheet,rowIndex,sheetList)<br>If IsObject(tab) Then<br>Dim rangFlag<br>rowsNum = rowsNum + 1<br>‘ Show properties<br>Output “================================”<br>sheet.cells(rowsNum, 1) =tab.name<br>sheet.cells(rowsNum, 1).HorizontalAlignment=3<br>sheet.cells(rowsNum, 2) = tab.code<br>‘sheet.cells(rowsNum, 5).HorizontalAlignment=3<br>‘sheet.cells(rowsNum, 6) = “”<br>‘sheet.cells(rowsNum, 7) = “表说明”<br>sheet.cells(rowsNum, 3) = tab.comment<br>‘sheet.cells(rowsNum, 8).HorizontalAlignment=3<br>sheet.Range(sheet.cells(rowsNum, 3),sheet.cells(rowsNum, 7)).Merge<br>‘设置超链接，从目录点击表名去查看表结构<br>‘字段中文名 字段英文名 字段类型 注释 是否主键 是否非空 默认值<br>sheetList.Hyperlinks.Add sheetList.cells(rowIndex,2), “”,”表结构”&amp;”!B”&amp;rowsNum<br>rowsNum = rowsNum + 1<br>sheet.cells(rowsNum, 1) = “字段中文名”<br>sheet.cells(rowsNum, 2) = “字段英文名”<br>sheet.cells(rowsNum, 3) = “字段类型”<br>sheet.cells(rowsNum, 4) = “注释”<br>sheet.cells(rowsNum, 5) = “是否主键”<br>sheet.cells(rowsNum, 6) = “是否非空”<br>sheet.cells(rowsNum, 7) = “默认值”<br>‘设置边框<br>sheet.Range(sheet.cells(rowsNum-1, 1),sheet.cells(rowsNum, 7)).Borders.LineStyle = “1”<br>‘sheet.Range(sheet.cells(rowsNum-1, 4),sheet.cells(rowsNum, 9)).Borders.LineStyle = “1”<br>‘字体为10号<br>sheet.Range(sheet.cells(rowsNum-1, 1),sheet.cells(rowsNum, 7)).Font.Size=10<br>Dim col ‘ running column<br>Dim colsNum<br>colsNum = 0<br>for each col in tab.columns<br>rowsNum = rowsNum + 1<br>colsNum = colsNum + 1<br>sheet.cells(rowsNum, 1) = col.name<br>‘sheet.cells(rowsNum, 3) = “”<br>‘sheet.cells(rowsNum, 4) = col.name<br>sheet.cells(rowsNum, 2) = col.code<br>sheet.cells(rowsNum, 3) = col.datatype<br>sheet.cells(rowsNum, 4) = col.comment<br>If col.Primary = true Then<br>sheet.cells(rowsNum, 5) = “Y”<br>Else<br>sheet.cells(rowsNum, 5) = “ “<br>End If<br>If col.Mandatory = true Then<br>sheet.cells(rowsNum, 6) = “Y”<br>Else<br>sheet.cells(rowsNum, 6) = “ “<br>End If<br>sheet.cells(rowsNum, 7) = col.defaultvalue<br>next<br>sheet.Range(sheet.cells(rowsNum-colsNum+1,1),sheet.cells(rowsNum,7)).Borders.LineStyle = “3”<br>‘sheet.Range(sheet.cells(rowsNum-colsNum+1,4),sheet.cells(rowsNum,9)).Borders.LineStyle = “3”<br>sheet.Range(sheet.cells(rowsNum-colsNum+1,1),sheet.cells(rowsNum,7)).Font.Size = 10<br>rowsNum = rowsNum + 2</p>
+<p>Output “FullDescription: “ + tab.Name<br>End If</p>
+<p>End Sub<br>‘—————————————————————————–<br>‘ Show List Of Table<br>‘—————————————————————————–<br>Sub ShowTableList(mdl, SheetList)<br>‘ Show tables of the current model/package<br>Dim rowsNo<br>rowsNo=1<br>‘ For each table<br>output “begin”<br>SheetList.cells(rowsNo, 1) = “主题”<br>SheetList.cells(rowsNo, 2) = “表中文名”<br>SheetList.cells(rowsNo, 3) = “表英文名”<br>SheetList.cells(rowsNo, 4) = “表说明”<br>rowsNo = rowsNo + 1<br>SheetList.cells(rowsNo, 1) = mdl.name<br>Dim tab<br>For Each tab In mdl.tables<br>If IsObject(tab) Then<br>rowsNo = rowsNo + 1<br>SheetList.cells(rowsNo, 1) = “”<br>SheetList.cells(rowsNo, 2) = tab.name<br>SheetList.cells(rowsNo, 3) = tab.code<br>SheetList.cells(rowsNo, 4) = tab.comment<br>End If<br>Next<br>SheetList.Columns(1).ColumnWidth = 20<br>SheetList.Columns(2).ColumnWidth = 20<br>SheetList.Columns(3).ColumnWidth = 30<br>SheetList.Columns(4).ColumnWidth = 60<br>output “end”<br>End Sub</p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;PS:选中tables&lt;br&gt;ctrl + shift +x 然后运行以下脚本&lt;/p&gt;
+&lt;hr&gt;
+&lt;p&gt;Option Explicit&lt;br&gt;Dim rowsNum&lt;br&gt;rowsNum = 0&lt;br&gt;‘—————————————————————————–&lt;br&gt;‘ Mai
+    
+    </summary>
+    
+      <category term="工具使用" scheme="http://fuyk.github.io/categories/%E5%B7%A5%E5%85%B7%E4%BD%BF%E7%94%A8/"/>
+    
+    
+      <category term="PowerDesigner" scheme="http://fuyk.github.io/tags/PowerDesigner/"/>
+    
+  </entry>
   
   <entry>
     <title>23种设计模式</title>
@@ -2775,6 +2808,61 @@ public void run() {
     
     
       <category term="学习" scheme="http://fuyk.github.io/tags/%E5%AD%A6%E4%B9%A0/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>PowerDesigner</title>
+    <link href="http://fuyk.github.io/2017/06/10/PowerDesigner/"/>
+    <id>http://fuyk.github.io/2017/06/10/PowerDesigner/</id>
+    <published>2017-06-10T10:25:20.000Z</published>
+    <updated>2017-09-11T10:37:19.456Z</updated>
+    
+    <content type="html"><![CDATA[<p>1.什么是PowerDesigner</p>
+<p>引入百度百科的说法是：</p>
+<p>power designer是能进行数据库设计的强大的软件，是一款开发人员常用的数据库建模工具。使用它可以分别从概念数据模型(Conceptual Data Model)和物理数据模型(Physical Data Model)两个层次对数据库进行设计。在这里，概念数据模型描述的是独立于数据库管理系统(DBMS)的实体定义和实体关系定义；物理数据模型是在概念数据模型的基础上针对目标数据库管理系统的具体化。</p>
+<p>2.什么是数据模型呢？</p>
+<p>数据模型是现实世界中数据特征的抽象。数据模型应该满足三个方面的要求：<br>1）能够比较真实地模拟现实世界<br>2）容易为人所理解<br>3）便于计算机实现</p>
+<p>恩？什么鬼，还是不懂～继续看</p>
+<p>概念数据模型也称信息模型，它以实体－联系(Entity-RelationShip,简称E-R)理论为基础，并对这一理论进行了扩充。它从用户的观点出发对信息进行建模，主要用于数据库的概念级设计。</p>
+<p>通常人们先将现实世界抽象为概念世界，然后再将概念世界转为机器世界。换句话说，就是先将现实世界中的客观对象抽象为实体(Entity)和联系(Relationship),它并不依赖于具体的计算机系统或某个DBMS系统，这种模型就是我们所说的CDM;然后再将CDM转换为计算机上某个DBMS所支持的数据模型，这样的模型就是物理数据模型,即PDM</p>
+<p>有关数据模型的知识，想加深学习大家可以网上学习，IT人要懂得利用网络知识。</p>
+<p>3.可以帮我们做哪些事</p>
+<p>㈠设计类图</p>
+<p>㈡使用PowerDesigner设计数据库关系以后，可以生成HTML,供团队成员进行讨论。</p>
+<p>㈢使用PowerDesigner进行面向对象分析与UML建模</p>
+<p> 动态模型</p>
+<p>动态图包括：状态图（Statechart Diagram）、顺序图（Sequence Diagram）、协作图（Collaboration Diagram）和活动图（Activity Diagram）。</p>
+<p>状态图：描述系统元素的状态变化。</p>
+<p>顺序图：描述按时间顺序系统元素之间的交互。</p>
+<p>协作图：按时空的顺序描述系统元素之间的交互和关系。</p>
+<p>活动图：描述系统元素的活动。</p>
+<p>功能模型</p>
+<p>五种视图包括：用例视图、结构模型（逻辑）视图、行为模型（并发）视图、实现模型（组件）视图和部署视图。</p>
+<p>用例视图：从用户角度表达系统功能（使用用例图+活动图）描述。</p>
+<p>结构模型（逻辑）视图：主要使用类图和对象图描述系统静态结构，用状态图、顺序图、协作图和活动图描述对象间实现给定功能时的动态协作关系。</p>
+<p>行为模型（并发）视图：展示系统动态行为以及其并发性，用状态图、顺序图、协作图、活动图、组件图和部署图描述。</p>
+<p>实现模型（组件）视图：展示系统实现的结构和行为描述，用组件图描述。</p>
+<p>部署视图：展示系统的实现环境和组件是如何在物理结构中部署的，用部署图描述。</p>
+<p>注：</p>
+<p>能用Powerdesigner作图就尽量用，尽量不要使用Visio；<br>虽然很多图之间都可以转换，但要自己判断转换后的图是否有意义；<br>所有的code都需要用规范的英文名称；<br>模型间的关系有依赖、泛化、关联、实现四种<br>PowerDesigner下载</p>
+<p>链接:  <a href="http://pan.baidu.com/s/1cd1pjK" target="_blank" rel="external">http://pan.baidu.com/s/1cd1pjK</a>  密码: uea4</p>
+<p>另：PowerDesigner是收费软件，提倡小伙伴通过正规渠道购买正版版权使用（给个表情你应该知道我在说神马 ）</p>
+<p> 注：汉化版也是博园一位神奇的博主自主捣腾的，汉化参考博园地址：<a href="http://www.cnblogs.com/yeaicc/p/PowerDesigner16CN.html" target="_blank" rel="external">http://www.cnblogs.com/yeaicc/p/PowerDesigner16CN.html</a></p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;1.什么是PowerDesigner&lt;/p&gt;
+&lt;p&gt;引入百度百科的说法是：&lt;/p&gt;
+&lt;p&gt;power designer是能进行数据库设计的强大的软件，是一款开发人员常用的数据库建模工具。使用它可以分别从概念数据模型(Conceptual Data Model)和物理数据模型
+    
+    </summary>
+    
+      <category term="工具使用" scheme="http://fuyk.github.io/categories/%E5%B7%A5%E5%85%B7%E4%BD%BF%E7%94%A8/"/>
+    
+    
+      <category term="PowerDesigner" scheme="http://fuyk.github.io/tags/PowerDesigner/"/>
     
   </entry>
   
